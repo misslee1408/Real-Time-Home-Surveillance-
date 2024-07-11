@@ -16,9 +16,6 @@ router.post('/', cameraController.addCamera);
 //router.get('/:id') this handles GET requests to fetch a camera by its ID.
 router.get('/:id', cameraController.getCameraById);
 
-//router.put('/:id') handles PUT requests to update a camera by its ID.
-router.put('/:id', cameraController.updateCamera);
-
 //router.delete('/:id') handles DELETE requests to remove a camera by its ID.
 router.delete('/:id', cameraController.deleteCamera);
 

@@ -38,24 +38,6 @@ exports.getCameraById = async (req, res) => {
   }
 };
 
-
-//updateCamera: Updates a camera's information using data from the request body and its ID.
-exports.updateCamera = async (req, res) => {
-  try {
-    const [updated] = await Camera.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (updated) {
-      const updatedCamera = await Camera.findByPk(req.params.id);
-      res.json(updatedCamera);
-    } else {
-      res.status(404).json({ error: 'oh oh Camera not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'oops! Failed to update camera' });
-  }
-};
-
 //deleteCamera: Deletes a camera by its ID.
 exports.deleteCamera = async (req, res) => {
   try {
