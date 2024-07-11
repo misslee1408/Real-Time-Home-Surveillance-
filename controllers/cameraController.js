@@ -9,7 +9,7 @@ exports.getAllCameras = async (req, res) => {
     const cameras = await Camera.findAll();
     res.json(cameras);
   } catch (error) {
-    res.status(500).json({ error: 'oops!! Failed to fetch cameras' });
+    res.status(500).json({ error: 'oops!! Failed to fetch all cameras' });
   }
 };
 

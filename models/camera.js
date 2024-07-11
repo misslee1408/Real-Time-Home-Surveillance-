@@ -1,25 +1,21 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Camera extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  Camera.init({
-    name: DataTypes.STRING,
-    location: DataTypes.STRING,
-    isActive: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'Camera',
-  });
-  return Camera;
-};
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); //This file exports a Sequelize instance configured to connect to your PostgreSQL database.
+
+const Camera = sequelize.define('Camera', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+}, {
+  timestamps: true,
+});
+
+module.exports = Camera;

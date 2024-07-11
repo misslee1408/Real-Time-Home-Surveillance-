@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Security Camera System</title>
+</head>
+<body>
+  <h1>Home Security Camera System</h1>
+  <video id="localVideo" autoplay playsinline></video>
+  <video id="remoteVideo" autoplay playsinline></video>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+  <script>
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideo = document.getElementById('remoteVideo');
+
+    const ws = new WebSocket('ws://localhost:3000');
+    const peerConnection = new RTCPeerConnection();
+
+    ws.onmessage = async (message) => {
+      const data = JSON.parse(message.data);
+
+      if (data.offer) {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        ws.send(JSON.stringify({ answer }));
+      }
+
+      if (data.answer) {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+      }
+
+      if (data.iceCandidate) {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(data.iceCandidate));
+      }
+    };
+
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        ws.send(JSON.stringify({ iceCandidate: event.candidate }));
+      }
+    };
+
+    peerConnection.ontrack = (event) => {
+      remoteVideo.srcObject = event.streams[0];
+    };
+
+    async function startStream() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      localVideo.srcObject = stream;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+      ws.send(JSON.stringify({ offer }));
+    }
+
+    startStream();
+  </script>
+</body>
+</html>
