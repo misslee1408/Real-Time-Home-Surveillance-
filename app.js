@@ -1,54 +1,30 @@
 const express = require('express');
-const app = express();
-const cameraRoutes = require('./routes/camera');
+const http = require('http');
 const WebSocket = require('ws');
 const path = require('path');
 
-app.use(express.json());
-app.use('/api/cameras', cameraRoutes);
+const app = express();
+const server = http.createServer(app);
 
-// Serve static files
+// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-const PORT = process.env.PORT || 3000;
-
-// Start the Express server first
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Now create the WebSocket server
+// Create WebSocket server
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(message) {
-    try {
-      const data = JSON.parse(message);
-
-      switch (data.type) {
-        case 'offer':
-        case 'answer':
-        case 'iceCandidate':
-          // Broadcast signaling data to all connected clients except the sender
-          wss.clients.forEach(function each(client) {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify(data));
-            }
-          });
-          break;
-        default:
-          console.log('Unknown message type:', data.type);
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    // Broadcast incoming messages to all connected clients
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
       }
-    } catch (error) {
-      console.error('Error processing message:', error);
-    }
+    });
   });
-
-  ws.on('error', (error) => {
-    console.error('WebSocket error:', error);
-  });
-
-  ws.send(JSON.stringify({ message: 'Welcome to the WebSocket server!' }));
 });
 
-console.log('WebSocket server is running on ws://localhost:' + PORT);
+// Start the server
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
