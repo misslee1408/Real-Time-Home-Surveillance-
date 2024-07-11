@@ -2,10 +2,11 @@ const express = require('express');
 const { Server } = require('ws');
 const { spawn } = require('child_process');
 const path = require('path');
-
+const cameraRoutes = require('./routes/camera');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use('/api/cameras', cameraRoutes);  // Use the camera routes
 // Static file serving
 app.use(express.static(path.join(__dirname, 'public')));
 
