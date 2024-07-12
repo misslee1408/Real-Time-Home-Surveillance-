@@ -1,11 +1,6 @@
 const { Sequelize } = require('sequelize');
-<<<<<<< HEAD
-// #flonicah
-const sequelize = new Sequelize('home-security', 'postgres', 'floxyleon2', {
-=======
 
-const sequelize = new Sequelize('home-security', 'postgres', 'liana', {
->>>>>>> cd4b515ecd7eb5faacbcdffbd4574e776db1719a
+const sequelize = new Sequelize('home-security', 'postgres', 'floxyleon2', {
   host: 'localhost',
   dialect: 'postgres',
 });

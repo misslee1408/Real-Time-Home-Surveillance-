@@ -3,6 +3,7 @@ const { User } = require('../models');
 
 
 
+
 exports.createUser = async (req, res) => {
     try {
         const users = await user.create(req.body);
@@ -12,6 +13,15 @@ exports.createUser = async (req, res) => {
     }
 };
 
+exports.getAllUsers = async (req, res) => {
+    try {
+      const users= await User.findAll();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ error: 'oops!! Failed to fetch all users' });
+    }
+  };
+  
 exports.getUserbyId = async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);

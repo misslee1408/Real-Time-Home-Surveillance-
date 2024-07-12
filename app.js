@@ -1,34 +1,16 @@
-<<<<<<< HEAD
-// app.js
-const express = require('express');
-const path = require('path');
-const { Server } = require('ws');
-const { spawn } = require('child_process');
-const app = express();
-const port = process.env.PORT || 3000;
-const cameraRoutes = require('./routes/camera')
-const userRoutes = require('./routes/user');
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
-
-// User routes
-app.use('/api/users', userRoutes);
-//camera routes
-app.use('/api/cameras', cameraRoutes);
-=======
 const express = require('express');
 const { Server } = require('ws');
 const { spawn } = require('child_process');
 const path = require('path');
 const cameraRoutes = require('./routes/camera');
+const userRoutes = require('./routes/user');
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use('/api/cameras', cameraRoutes);  // Use the camera routes
+app.use('/api/users', userRoutes); //user router api
 // Static file serving
 app.use(express.static(path.join(__dirname, 'public')));
->>>>>>> cd4b515ecd7eb5faacbcdffbd4574e776db1719a
 
 // Endpoint for video stream
 app.post('/stream', (req, res) => {
@@ -51,10 +33,6 @@ app.post('/stream', (req, res) => {
         res.sendStatus(200);
     });
 });
-<<<<<<< HEAD
-=======
-
->>>>>>> cd4b515ecd7eb5faacbcdffbd4574e776db1719a
 // WebSocket server setup
 const server = app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
@@ -83,8 +61,4 @@ wss.on('connection', (ws) => {
     });
 
     ws.send(JSON.stringify({ message: 'WebSocket connection established' }));
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> cd4b515ecd7eb5faacbcdffbd4574e776db1719a
