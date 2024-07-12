@@ -1,16 +1,10 @@
 const { Sequelize } = require('sequelize');
+const config = require('./config.json')['development'];
 
-const sequelize = new Sequelize('home-security', 'postgres', 'liana', {
-  host: 'localhost',
-  dialect: 'postgres',
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect,
+  logging: false // Disable logging SQL queries
 });
-
-sequelize.authenticate() //method used to verify the connection.
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch((error) => {
-    console.error('Unable to connect to the database:', error);
-  });
 
 module.exports = sequelize;

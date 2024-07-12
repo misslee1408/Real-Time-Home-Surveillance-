@@ -1,15 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const { Sequelize, DataTypes } = require('sequelize');
+const config = require('../config/config.json')['development'];
 
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  database: 'home-security',
-  username: 'postgres',
-  password: 'liana',
-  host: 'localhost',
-  port: 5432, // or your PostgreSQL port
-  logging: false, // disable logging SQL queries
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect,
+  logging: false // Disable logging SQL queries
 });
 
 const models = {};
@@ -17,10 +14,10 @@ const models = {};
 // Read all model files from the current directory
 fs
   .readdirSync(__dirname)
-  .filter(file => file !== 'index.js') // Exclude index.js itself
+  .filter(file => file !== 'index.js' && file.endsWith('.js')) // Exclude index.js itself
   .forEach(file => {
     const modelDefiner = require(path.join(__dirname, file));
-    const model = new modelDefiner(sequelize, DataTypes);
+    const model = modelDefiner(sequelize, DataTypes);
     models[model.name] = model;
   });
 

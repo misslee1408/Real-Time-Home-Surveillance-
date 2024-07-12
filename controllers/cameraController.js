@@ -1,9 +1,6 @@
-// controllers/cameraController.js
 const { Camera } = require('../models');
 
-
-/* getAllCameras: Fetches all cameras from the database (the two cameras), if it does not find the cameras
-then the error message is displayed */
+// Fetch all cameras
 exports.getAllCameras = async (req, res) => {
   try {
     const cameras = await Camera.findAll();
@@ -13,8 +10,7 @@ exports.getAllCameras = async (req, res) => {
   }
 };
 
-/*addCamera: Adds a new camera to the database using data from the request body.
-so suppose the kitchen has a new camera so the end user can update the system */
+// Add a new camera
 exports.addCamera = async (req, res) => {
   try {
     const camera = await Camera.create(req.body);
@@ -24,7 +20,7 @@ exports.addCamera = async (req, res) => {
   }
 };
 
-// getCameraById: Fetches a single camera by its ID, like the one camera for the front dooor
+// Fetch a single camera by its ID
 exports.getCameraById = async (req, res) => {
   try {
     const camera = await Camera.findByPk(req.params.id);
@@ -38,7 +34,7 @@ exports.getCameraById = async (req, res) => {
   }
 };
 
-//deleteCamera: Deletes a camera by its ID.
+// Delete a camera by its ID
 exports.deleteCamera = async (req, res) => {
   try {
     const deleted = await Camera.destroy({
@@ -53,4 +49,3 @@ exports.deleteCamera = async (req, res) => {
     res.status(500).json({ error: 'oops! Failed to delete camera' });
   }
 };
-
