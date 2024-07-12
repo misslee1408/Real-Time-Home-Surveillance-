@@ -2,7 +2,11 @@
 
   "development": {
     "username": "postgres",
+<<<<<<< HEAD
     "password": "floxyleon2",
+=======
+    "password": "liana",
+>>>>>>> cd4b515ecd7eb5faacbcdffbd4574e776db1719a
     "database": "home-security",
     "host": "127.0.0.1",
     "dialect": "postgres"
