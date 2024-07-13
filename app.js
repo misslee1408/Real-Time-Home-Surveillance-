@@ -1,7 +1,7 @@
+// app.js
 const express = require('express');
 const path = require('path');
 const { sequelize } = require('./models'); // Import the sequelize instance from models
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -15,6 +15,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Import and use camera routes
 const cameraRoutes = require('./routes/camera');
 app.use('/api/cameras', cameraRoutes);
+
+// Import and use user routes
+const userRoutes = require('./routes/user');
+app.use('/api/users', userRoutes);
 
 // Test database connection
 sequelize.authenticate()

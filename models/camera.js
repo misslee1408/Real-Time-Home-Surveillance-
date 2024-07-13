@@ -1,3 +1,5 @@
+// bsc-com-26-29 (liana chagunda)
+//camera details
 module.exports = (sequelize, DataTypes) => {
   const Camera = sequelize.define('Camera', {
     name: {
