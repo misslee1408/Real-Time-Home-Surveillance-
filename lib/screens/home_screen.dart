@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_time_home_surveillance_system/widgets/camera_control_widget.dart';
 import 'package:real_time_home_surveillance_system/widgets/live_video_streaming_widget.dart';
+import 'package:real_time_home_surveillance_system/widgets/motion_detection_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             LiveVideoStreamingWidget(),
             CameraControlWidget(),
-            // MotionDetectionWidget(),
+            MotionDetectionWidget(),
             // RecordingPlaybackWidget(),
             // SecurityPrivacyWidget(),
           ],
