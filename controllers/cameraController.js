@@ -60,22 +60,22 @@ exports.deleteCamera = async (req, res) => {
 };
 
 // Send SMS on motion detection
-// exports.sendSmsOnMotionDetection = async (cameraId) => {
-//   try {
-//     const camera = await Camera.findByPk(cameraId);
-//     if (camera) {
-//       const message = `Motion detected by camera ${camera.name} at location ${camera.location}`;
-//       nexmo.message.sendSms(vonagePhoneNumber, recipientPhoneNumber, message, (err, responseData) => {
-//         if (err) {
-//           console.log('Error sending SMS:', err);
-//         } else {
-//           if (responseData.messages[0].status === '0') {
-//             console.log('SMS sent successfully:', responseData);
-//           } else {
-//             console.log(`SMS failed with status: ${responseData.messages[0]['status']}`);
-//           }
-//         }
-//       });
+exports.sendSmsOnMotionDetection = async (cameraId) => {
+  try {
+    const camera = await Camera.findByPk(cameraId);
+    if (camera) {
+      const message = `Motion detected by camera ${camera.name} at location ${camera.location}`;
+      nexmo.message.sendSms(vonagePhoneNumber, recipientPhoneNumber, message, (err, responseData) => {
+        if (err) {
+          console.log('Error sending SMS:', err);
+        } else {
+          if (responseData.messages[0].status === '0') {
+            console.log('SMS sent successfully:', responseData);
+          } else {
+            console.log(`SMS failed with status: ${responseData.messages[0]['status']}`);
+          }
+        }
+      });
     } else {
       console.log('Camera not found for motion detection.');
     }
