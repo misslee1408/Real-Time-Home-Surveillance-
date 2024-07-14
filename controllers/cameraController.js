@@ -6,8 +6,8 @@ const nexmo = new Nexmo({
   apiSecret: 'YOUR_API_SECRET' //vonage api secrt key
 });
 
-// const vonagePhoneNumber = 'Vonage APIs';
-// const recipientPhoneNumber = 'YOUR_PHONE_NUMBER';
+const vonagePhoneNumber = 'Vonage APIs';
+const recipientPhoneNumber = 'YOUR_PHONE_NUMBER';
 
 // Fetch all cameras
 exports.getAllCameras = async (req, res) => {
