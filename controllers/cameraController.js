@@ -2,8 +2,8 @@ const { Camera } = require('../models');
 const Nexmo = require('nexmo');
 
 const nexmo = new Nexmo({
-  apiKey: 'YOUR_API_KEY', //vonage api api key
-  apiSecret: 'YOUR_API_SECRET' //vonage api secrt key
+  apiKey: '19690ed4', //vonage api api key
+  apiSecret: 'vPp4uzxTaX9cuHlB' //vonage api secrt key
 });
 
 const vonagePhoneNumber = 'Vonage APIs';
@@ -79,7 +79,3 @@ exports.sendSmsOnMotionDetection = async (cameraId) => {
     } else {
       console.log('Camera not found for motion detection.');
     }
-  } catch (error) {
-    console.error('Error sending SMS on motion detection:', error);
-  }
-};
