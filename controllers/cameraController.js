@@ -1,4 +1,13 @@
 const { Camera } = require('../models');
+const Nexmo = require('nexmo');
+
+const nexmo = new Nexmo({
+  apiKey: 'YOUR_API_KEY', //vonage api api key
+  apiSecret: 'YOUR_API_SECRET' //vonage api secrt key
+});
+
+// const vonagePhoneNumber = 'Vonage APIs';
+// const recipientPhoneNumber = 'YOUR_PHONE_NUMBER';
 
 // Fetch all cameras
 exports.getAllCameras = async (req, res) => {
@@ -47,5 +56,30 @@ exports.deleteCamera = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'oops! Failed to delete camera' });
+  }
+};
+
+// Send SMS on motion detection
+// exports.sendSmsOnMotionDetection = async (cameraId) => {
+//   try {
+//     const camera = await Camera.findByPk(cameraId);
+//     if (camera) {
+//       const message = `Motion detected by camera ${camera.name} at location ${camera.location}`;
+//       nexmo.message.sendSms(vonagePhoneNumber, recipientPhoneNumber, message, (err, responseData) => {
+//         if (err) {
+//           console.log('Error sending SMS:', err);
+//         } else {
+//           if (responseData.messages[0].status === '0') {
+//             console.log('SMS sent successfully:', responseData);
+//           } else {
+//             console.log(`SMS failed with status: ${responseData.messages[0]['status']}`);
+//           }
+//         }
+//       });
+    } else {
+      console.log('Camera not found for motion detection.');
+    }
+  } catch (error) {
+    console.error('Error sending SMS on motion detection:', error);
   }
 };
