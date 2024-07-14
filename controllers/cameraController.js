@@ -79,3 +79,7 @@ exports.sendSmsOnMotionDetection = async (cameraId) => {
     } else {
       console.log('Camera not found for motion detection.');
     }
+  } catch (error) {
+    console.error('Error sending SMS on motion detection:', error);
+  }
+};
