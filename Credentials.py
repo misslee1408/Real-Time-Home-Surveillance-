@@ -23,7 +23,7 @@ def home():
 
 @app.route('/motion_detected', methods=['POST'])
 def motion_detected():
-    phone_number = '+265881680849'
+    phone_number = '+265881978126'
     message = "Motion detected in your home. Check your security camera for more details."
     message_sid = send_motion_alert(phone_number, message)
     return f"Message sent with SID: {message_sid}"
