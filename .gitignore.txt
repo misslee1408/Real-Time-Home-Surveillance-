@@ -1,7 +1,7 @@
 # Ignore Python virtual environment directory
-env/
 .venv/
 venv/
+.env
 
 # Ignore Python virtual environment directories (PyCharm, etc.)
 .pyvenv/
@@ -35,7 +35,7 @@ config.ini
 *.db
 
 # Ignore config file with secrets
-config.py
+Config.py
 
 
 

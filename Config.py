@@ -1,5 +1,11 @@
 # Config.py
+from dotenv import load_dotenv
+import os
 
-TWILIO_ACCOUNT_SID = 'ACa6563cbfd1186d359d3a0e280c707749'
-TWILIO_AUTH_TOKEN = 'fdb7d1fd091ff26e6cfc57212b36edee'
-TWILIO_PHONE_NUMBER = '+13344234464'
+# Load environment variables from .env file
+load_dotenv()
+
+# Assign the environment variables to variables in your code
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')

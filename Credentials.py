@@ -1,17 +1,18 @@
 from flask import Flask, render_template, request
 from twilio.rest import Client
+import Config
 
 app = Flask(__name__)
 
 # Your Account SID and Auth Token from twilio.com/console
-account_sid = 'ACa6563cbfd1186d359d3a0e280c707749'
-auth_token = 'fdb7d1fd091ff26e6cfc57212b36edee'
+account_sid = Config.TWILIO_ACCOUNT_SID
+auth_token = Config.TWILIO_AUTH_TOKEN
 client = Client(account_sid, auth_token)
 
 def send_motion_alert(phone_number, message):
     message = client.messages.create(
         body=message,
-        from_='+13344234464',  # Your Twilio phone number (must be a validated number on Twilio)
+        from_=Config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
         to=phone_number
     )
     return message.sid
@@ -29,3 +30,4 @@ def motion_detected():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
