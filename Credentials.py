@@ -28,6 +28,7 @@ def motion_detected():
     message_sid = send_motion_alert(phone_number, message)
     return f"Message sent with SID: {message_sid}"
 
+
 if __name__ == "__main__":
     app.run(debug=True)
 
