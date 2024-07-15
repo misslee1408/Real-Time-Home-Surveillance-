@@ -1,0 +1,46 @@
+# Ignore Python virtual environment directory
+env/
+.venv/
+venv/
+
+# Ignore Python virtual environment directories (PyCharm, etc.)
+.pyvenv/
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore system-specific files or directories
+.DS_Store
+Thumbs.db
+
+# Ignore IDE or editor specific files
+.idea/
+.vscode/
+
+# Ignore any sensitive or environment-specific files
+config.ini
+.env
+
+# Ignore log files
+*.log
+
+# Ignore any other temporary or system-generated files
+*.tmp
+
+# Ignore any backup files
+*.bak
+
+# Ignore any database files
+*.db
+
+# Ignore config file with secrets
+config.py
+
+
+
+
+
+
+
+
