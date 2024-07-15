@@ -1,10 +1,8 @@
-// app.js
 const express = require('express');
 const path = require('path');
-const { sequelize } = require('./models'); // Import the sequelize instance from models
+const { sequelize } = require('./models');
 const app = express();
 const port = process.env.PORT || 3000;
-// adding the vonage part from cameracontroller
 const Nexmo = require('nexmo');
 const cameraController = require('./controllers/cameraController');
 
@@ -41,7 +39,10 @@ sequelize.sync()
     console.error('Error syncing database:', err);
   });
 
-// Set up WebSocket server flonicah
+// Set up WebSocket server
+const server = app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
 
@@ -59,4 +60,3 @@ wss.on('connection', function connection(ws) {
 });
 
 console.log('WebSocket server is running on ws://localhost:8080');
-

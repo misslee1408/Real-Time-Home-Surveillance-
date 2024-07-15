@@ -1,8 +1,9 @@
+// websocket.js
+
 const express = require('express');
 const path = require('path');
 const { sequelize } = require('./models');
 const cameraController = require('./controllers/cameraController');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Import and use camera routes
 const cameraRoutes = require('./routes/camera');
 app.use('/api/cameras', cameraRoutes);
 
@@ -49,7 +51,9 @@ const wss = new WebSocket.Server({ server });
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
     const data = JSON.parse(message);
-    if (data.cameraId) {
+    if (data.command === 'startVideoRecording' && data.cameraId) {
+      cameraController.startVideoRecording(data.cameraId);
+    } else if (data.cameraId) {
       cameraController.sendSmsOnMotionDetection(data.cameraId);
     }
   });
