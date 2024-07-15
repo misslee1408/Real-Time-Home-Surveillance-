@@ -4,6 +4,9 @@ const path = require('path');
 const { sequelize } = require('./models'); // Import the sequelize instance from models
 const app = express();
 const port = process.env.PORT || 3000;
+// adding the vonage part from cameracontroller
+const Nexmo = require('nexmo');
+const cameraController = require('./controllers/cameraController');
 
 // Middleware to parse JSON and urlencoded data
 app.use(express.json());
@@ -38,7 +41,22 @@ sequelize.sync()
     console.error('Error syncing database:', err);
   });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Set up WebSocket server flonicah
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    const data = JSON.parse(message);
+    if (data.command === 'startVideoRecording' && data.cameraId) {
+      cameraController.startVideoRecording(data.cameraId);
+    } else if (data.cameraId) {
+      cameraController.sendSmsOnMotionDetection(data.cameraId);
+    }
+  });
+
+  ws.send('WebSocket server connected'); // Send a message to client upon connection
 });
+
+console.log('WebSocket server is running on ws://localhost:8080');
+
