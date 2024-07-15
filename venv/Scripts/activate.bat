@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\bsc_com_ne_05_19\Music\Real-Time-Home-Surveillance-\venv
+set VIRTUAL_ENV=C:\Users\bsc_com_ne_07_18\Music\Real-Time-Home-surveillance-\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
