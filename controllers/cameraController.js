@@ -1,11 +1,26 @@
 const { Camera } = require('../models');
 const Nexmo = require('nexmo');
+// adding something new flonicah
+const { spawn } = require('child_process');
+const path = require('path');
 
-const nexmo = new Nexmo({
-  apiKey: '19690ed4', //vonage api api key
-  apiSecret: 'vPp4uzxTaX9cuHlB' //vonage api secrt key
-});
+// vonage ai integration fot the sms receiving #flonicah
 
+// const nexmo = new Nexmo({
+//   apiKey: '19690ed4', //vonage api api key
+//   apiSecret: 'vPp4uzxTaX9cuHlB' //vonage api secrt key
+// });
+// trying to use the vonage fomat to get rid of the uotdated 
+
+const { Vonage } = require('@vonage/server-sdk')
+
+const vonage = new Vonage({
+  apiKey: "19690ed4",
+  apiSecret: "vPp4uzxTaX9cuHlB"
+})
+
+
+// adding the contact to  recieve the smsflonicah
 const vonagePhoneNumber = 'Vonage APIs';
 const recipientPhoneNumber = '265997189926';
 
@@ -59,7 +74,7 @@ exports.deleteCamera = async (req, res) => {
   }
 };
 
-// Send SMS on motion detection
+// Send SMS on motion detection #flonicah
 exports.sendSmsOnMotionDetection = async (cameraId) => {
   try {
     const camera = await Camera.findByPk(cameraId);
@@ -81,5 +96,39 @@ exports.sendSmsOnMotionDetection = async (cameraId) => {
     }
   } catch (error) {
     console.error('Error sending SMS on motion detection:', error);
+  }
+};
+// starting video recording for the cammera #flonicah
+exports.startVideoRecording = async (cameraId) => {
+  try {
+    const camera = await Camera.findByPk(cameraId);
+    if (camera) {
+      const filePath = path.join(__dirname, '..', 'recordings', `camera_${cameraId}_${Date.now()}.mp4`);
+      const cameraUrl = 'rtsp://our-camera-url'; // sensor camera's RTSP stream URL(dummy for a moment) # FLONICAH
+
+      // Example using ffmpeg for video recording# FLONICAH
+      const ffmpegProcess = spawn('ffmpeg', [
+        '-i', cameraUrl,
+        '-t', '3600', // Recording duration (in seconds)FLONICAH
+        '-codec:v', 'copy',
+        '-an', filePath
+      ]);
+
+      ffmpegProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
+      ffmpegProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+
+      ffmpegProcess.on('close', (code) => {
+        console.log(`Video recording finished with code ${code}`);
+      });
+    } else {
+      console.log('Camera not found for video recording.');
+    }
+  } catch (error) {
+    console.error('Error starting video recording:', error);
   }
 };
