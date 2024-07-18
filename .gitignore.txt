@@ -37,8 +37,7 @@ config.ini
 # Ignore config file with secrets
 Config.py
 
-
-
+C:/Users/bsc_com_ne_05_19/Music/Real-Time-Home-Surveillance-/real-time-home-surveillance-firebase-adminsdk-xiafw-6581799d9b
 
 
 
