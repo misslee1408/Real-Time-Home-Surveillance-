@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/HomeScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:real_time_home_surveillance_system/screens/NotificationsProvider.dart';
+import 'HomeScreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => NotificationsProvider(),
+      child: MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
