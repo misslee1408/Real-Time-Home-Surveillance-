@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:real_time_home_surveillance_system/screens/home_screen.dart';
-import 'HomeScreen.dart';
+import 'screens/HomeScreen.dart';
 
 void main() {
   runApp(MyApp());

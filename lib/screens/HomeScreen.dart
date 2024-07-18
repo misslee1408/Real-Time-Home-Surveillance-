@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:real_time_home_surveillance_system/widgets/camera_control_widget.dart';
-import 'package:real_time_home_surveillance_system/widgets/live_video_streaming_widget.dart';
-import 'package:real_time_home_surveillance_system/widgets/motion_detection_widget.dart';
-import 'package:real_time_home_surveillance_system/widgets/notification_widget.dart';
-import 'package:real_time_home_surveillance_system/widgets/record_playback_widget.dart';
-import 'package:real_time_home_surveillance_system/widgets/security_privacy_widget.dart';
-
+import 'CameraControlWidget.dart';
+import 'LiveVideoStreamingWidget.dart';
+import 'motion_detection_widget.dart';
+import 'notification_widget.dart';
+import 'record_playback_widget.dart';
+import 'security_privacy_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import ' LiveVideoStreamingWidget .dart';
-
-import 'CameraControlWidget.dart';
-import 'NotificationsWidget.dart';
+import 'LiveVideoStreamingWidget.dart';
+import 'notification_widget.dart';
 
 
 class HomeScreen extends StatefulWidget {
