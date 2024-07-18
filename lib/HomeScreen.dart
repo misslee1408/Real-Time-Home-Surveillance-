@@ -1,158 +1,143 @@
 import 'package:flutter/material.dart';
-import 'screens/LiveVideoStreamingWidget.dart';
-import 'screens/motion_detection_widget.dart';
-import 'screens/notification_widget.dart';
-import 'screens/record_playback_widget.dart';
-import 'screens/security_privacy_widget.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'screens/LiveVideoStreamingWidget.dart';
-import 'screens/CameraControllerWidget.dart';
-import 'screens/notification_widget.dart';
 
-
-class HomeScreen extends StatefulWidget {
-  final VoidCallback toggleTheme;
-  final bool isDarkMode;
-
-  HomeScreen({required this.toggleTheme, required this.isDarkMode});
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  static List<Widget> _widgetOptions = <Widget>[
-    Column(
-      children: [
-        LiveVideoStreamingWidget(),
-        PrivacyAndSecuritySections(),
-      ],
-    ),
-    NotificationsWidget(),
-    Column(
-      children: [
-        CameraControlWidget(),
-        PrivacyAndSecuritySections(),
-      ],
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Surveillance System'),
-        actions: [
-          IconButton(
-            icon: Icon(widget.isDarkMode ? Icons.brightness_7 : Icons.brightness_2),
-            onPressed: widget.toggleTheme,
-          ),
-        ],
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
-        onTap: _onItemTapped,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/background.jpeg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Center(
+                    child: Text(
+                      'WELCOME TAMANDA!',//to be made dynamic
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MenuButton(
+                          icon: Icons.videocam,
+                          text: 'Live streaming view',
+                          onPressed: () {
+                            // Handle button press
+                          },
+                        ),
+                       
+                        SizedBox(height: 20),
+                        MenuButton(
+                          icon: Icons.photo,
+                          text: 'Footages',
+                          onPressed: () {
+                            // Handle button press
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 90,
+              right: 30,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Handle button press
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.person, color: Colors.white),
+                    onPressed: () {
+                      // Handle button press
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.home, color: Colors.white),
+                    onPressed: () {
+                      // Handle button press
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.settings, color: Colors.white),
+                    onPressed: () {
+                      // Handle button press
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class PrivacyAndSecuritySections extends StatelessWidget {
-  void _showSetPasswordDialog(BuildContext context) {
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
+class MenuButton extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Set Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Enter Password'),
-              ),
-              TextField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Confirm Password'),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Set'),
-              onPressed: () {
-                if (passwordController.text == confirmPasswordController.text) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Password set successfully')),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Passwords do not match')),
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  MenuButton({required this.icon, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('Security and Privacy'),
-        ListTile(
-          title: Text('Set Password'),
-          trailing: Icon(Icons.lock),
-          onTap: () => _showSetPasswordDialog(context),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black, backgroundColor: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        minimumSize: Size(300, 60), // Set a fixed size for the buttons
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        ListTile(
-          title: Text('Privacy Settings'),
-          trailing: Icon(Icons.privacy_tip),
-          onTap: () {
-            // Add privacy settings functionality
-          },
-        ),
-      ],
+      ),
+      onPressed: onPressed,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.black),
+          SizedBox(width: 10),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'HomeScreen.dart';
 import 'create_account_screen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -56,7 +57,10 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Log in action
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
