@@ -1,8 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:real_time_home_surveillance_system/providers/camera_controller_provider.dart'; 
 
 class LiveVideoStreamingWidget extends StatefulWidget {
   @override
@@ -10,13 +8,13 @@ class LiveVideoStreamingWidget extends StatefulWidget {
 }
 
 class _LiveVideoStreamingWidgetState extends State<LiveVideoStreamingWidget> {
-  late VideoPlayerController _videoController;
+  late VideoPlayerController _controller;
   bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    _videoController = VideoPlayerController.network('http://<raspberry-pi-ip>:<port>/video_feed')
+    _controller = VideoPlayerController.network('http://<raspberry-pi-ip>:<port>/video_feed')
       ..initialize().then((_) {
         setState(() {
           _isPlaying = false;
@@ -28,63 +26,55 @@ class _LiveVideoStreamingWidgetState extends State<LiveVideoStreamingWidget> {
 
   @override
   void dispose() {
-    _videoController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   void _togglePlayPause() {
     setState(() {
-      if (_videoController.value.isInitialized) {
-        if (_videoController.value.isPlaying) {
-          _videoController.pause();
+      if (_controller.value.isInitialized) {
+        if (_controller.value.isPlaying) {
+          _controller.pause();
         } else {
-          _videoController.play();
+          _controller.play();
         }
-        _isPlaying = _videoController.value.isPlaying;
+        _isPlaying = _controller.value.isPlaying;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cameraProvider = Provider.of<CameraControllerProvider>(context);
-
-    return cameraProvider.controller.value.isInitialized
-        ? Column(
-            children: [
-              AspectRatio(
-                aspectRatio: cameraProvider.controller.value.aspectRatio,
-                child: CameraPreview(cameraProvider.controller),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                color: Colors.black,
-                child: Center(
-                  child: _videoController.value.isInitialized
-                      ? Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: _videoController.value.aspectRatio,
-                              child: VideoPlayer(_videoController),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                _isPlaying ? Icons.pause_circle : Icons.play_circle,
-                                color: Colors.white,
-                                size: 50.0,
-                              ),
-                              onPressed: _togglePlayPause,
-                            ),
-                          ],
-                        )
-                      : CircularProgressIndicator(),
+    return Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5, // Increased height
+          color: Colors.black,
+          child: Center(
+            child: _controller.value.isInitialized
+                ? Stack(
+              alignment: Alignment.center,
+              children: [
+                AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
                 ),
-              ),
-              if (_videoController.value.isInitialized)
-                VideoProgressIndicator(_videoController, allowScrubbing: true),
-            ],
-          )
-        : Center(child: CircularProgressIndicator());
+                IconButton(
+                  icon: Icon(
+                    _isPlaying ? Icons.pause_circle : Icons.play_circle,
+                    color: Colors.white,
+                    size: 50.0,
+                  ),
+                  onPressed: _togglePlayPause,
+                ),
+              ],
+            )
+                : CircularProgressIndicator(),
+          ),
+        ),
+        if (_controller.value.isInitialized)
+          VideoProgressIndicator(_controller, allowScrubbing: true),
+      ],
+    );
   }
 }

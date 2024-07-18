@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-class CameraControllerProvider extends ChangeNotifier {
-  late CameraController _controller;
 
-  CameraController get controller => _controller;
-
-  CameraControllerProvider(CameraDescription cameraDescription) {
-    initializeController(cameraDescription);
-  }
-
-  void initializeController(CameraDescription cameraDescription) async {
-    _controller = CameraController(cameraDescription, ResolutionPreset.high);
-    await _controller.initialize();
-    notifyListeners();
-  }
-
+class CameraControlWidget extends StatelessWidget {
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text('Video Quality'),
+          trailing: DropdownButton<String>(
+            items: <String>['Low', 'Medium', 'High'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (_) {},
+          ),
+        ),
+        ListTile(
+          title: Text('Magnify'),
+          trailing: Icon(Icons.zoom_in),
+          onTap: () {
+            // Add magnify functionality
+          },
+        ),
+        // more camera control options will be added here
+      ],
+    );
   }
 }
