@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => AddCameraScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

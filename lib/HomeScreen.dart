@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class AddCameraScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,84 +19,87 @@ class HomePage extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Center(
-                    child: Text(
-                      'WELCOME TAMANDA!',//to be made dynamic
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                    ),
+                      Text(
+                        'ADD CAMERA',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MenuButton(
-                          icon: Icons.videocam,
-                          text: 'Live streaming view',
-                          onPressed: () {
-                            // Handle button press
-                          },
-                        ),
-                       
-                        SizedBox(height: 20),
-                        MenuButton(
-                          icon: Icons.photo,
-                          text: 'Footages',
-                          onPressed: () {
-                            // Handle button press
-                          },
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextField(hintText: 'Camera ID'),
+                          SizedBox(height: 20),
+                          CustomTextField(hintText: 'Camera name'),
+                          SizedBox(height: 20),
+                          CustomTextField(hintText: 'Location'),
+                          SizedBox(height: 20),
+                          CustomTextField(hintText: 'URL'),
+                          SizedBox(height: 100),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Handle add camera button press
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('Add camera', style: TextStyle(color: Colors.white, fontSize: 16)),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.person, color: Colors.white),
+                        onPressed: () {
+                          // Handle person button press
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.home, color: Colors.white),
+                        onPressed: () {
+                          // Handle home button press
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.settings, color: Colors.white),
+                        onPressed: () {
+                          // Handle settings button press
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ],
-            ),
-            Positioned(
-              bottom: 90,
-              right: 30,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Handle button press
-                },
-                child: Icon(Icons.add),
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.person, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
-                  ),
-                ],
-              ),
             ),
           ],
         ),
@@ -105,38 +108,26 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class MenuButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final VoidCallback onPressed;
+class CustomTextField extends StatelessWidget {
+  final String hintText;
 
-  MenuButton({required this.icon, required this.text, required this.onPressed});
+  CustomTextField({required this.hintText});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black, backgroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-        minimumSize: Size(300, 60), // Set a fixed size for the buttons
-        shape: RoundedRectangleBorder(
+    return TextField(
+      style: TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.white54),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.white),
         ),
-      ),
-      onPressed: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.black),
-          SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.white),
+        ),
       ),
     );
   }
