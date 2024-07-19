@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:real_time_home_surveillance_system/screens/NotificationsProvider.dart';
 import 'HomeScreen.dart';
+import 'LoginScreen.dart';
+import 'NotificationsProvider .dart';
 
 void main() {
   runApp(
@@ -30,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Remove the debug banner
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
+      home: LoginScreen(),//HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
     );
   }
 }

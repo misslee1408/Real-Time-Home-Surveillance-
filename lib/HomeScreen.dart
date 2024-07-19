@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
-import 'screens/LiveVideoStreamingWidget.dart';
-import 'screens/motion_detection_widget.dart';
-import 'screens/notification_widget.dart';
-import 'screens/record_playback_widget.dart';
-import 'screens/security_privacy_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'screens/LiveVideoStreamingWidget.dart';
 import 'screens/CameraControllerWidget.dart';
+import 'screens/LiveVideoStreamingWidget.dart';
 import 'screens/notification_widget.dart';
-
+import 'NotificationsWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -53,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Surveillance System'),
         actions: [
           IconButton(
-            icon: Icon(widget.isDarkMode ? Icons.brightness_7 : Icons.brightness_2),
+            icon: Icon(
+                widget.isDarkMode ? Icons.brightness_7 : Icons.brightness_2),
             onPressed: widget.toggleTheme,
           ),
         ],
