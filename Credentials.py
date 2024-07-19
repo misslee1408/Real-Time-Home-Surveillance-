@@ -1,22 +1,30 @@
 from twilio.rest import Client
 import firebase_admin
-from firebase_admin import credentials, storage, initialize_app
+from firebase_admin import credentials, storage
 import tempfile
 import os
 import config  # Ensure Config.py contains your Twilio credentials and Firebase service account key path
+
+
+
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate(r"C:\Users\bsc_com_ne_05_19\\Music\Real-Time-Home-Surveillance-\real-time-home-surveillance-firebase-adminsdk-xiafw-6581799d9b.JSON")
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'real-time-home-surveillance.appspot.com'
+})
+
+# Initialize Firebase Storage
+bucket = storage.bucket()
+
 
 # Initialize Twilio client
 account_sid = config.TWILIO_ACCOUNT_SID
 auth_token = config.TWILIO_AUTH_TOKEN
 client = Client(account_sid, auth_token)
 
-# Initialize Firebase Storage
-bucket = storage.bucket()
-# Initialize Firebase Admin SDK
-cred = credentials.Certificate(r"C:\Users\bsc_com_ne_05_19\\Music\Real-Time-Home-Surveillance-\real-time-home-surveillance-firebase-adminsdk-xiafw-6581799d9b.JSON")
-firebase_admin.initialize_app(cred, {
-    'storageBucket': 'real-time-home-surveillance.appspot.com'
-})
+
+
 
 def send_motion_alert(phone_number, message):
     # Send motion alert message via Twilio
