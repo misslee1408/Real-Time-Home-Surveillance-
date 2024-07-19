@@ -1,6 +1,6 @@
 {
-    "name": "real_time_home_surveillance_system",
-    "short_name": "real_time_home_surveillance_system",
+    "name": "surveillance_system",
+    "short_name": "surveillance_system",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
@@ -30,6 +30,32 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "font_manifest": [
+        {
+            "family": "MaterialIcons",
+            "fonts": [
+                {
+                    "asset": "fonts/MaterialIcons-Extended.ttf"
+                }
+            ]
+        },
+        {
+            "family": "GoogleSans",
+            "fonts": [
+                {
+                    "asset": "fonts/GoogleSans-Regular.ttf"
+                }
+            ]
+        },
+        {
+            "family": "GalleryIcons",
+            "fonts": [
+                {
+                    "asset": "fonts/GalleryIcons.ttf"
+                }
+            ]
         }
     ]
 }

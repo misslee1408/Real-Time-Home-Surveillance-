@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "real_time_home_surveillance_system" "\0"
+            VALUE "FileDescription", "surveillance_system" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "real_time_home_surveillance_system" "\0"
+            VALUE "InternalName", "surveillance_system" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "real_time_home_surveillance_system.exe" "\0"
-            VALUE "ProductName", "real_time_home_surveillance_system" "\0"
+            VALUE "OriginalFilename", "surveillance_system.exe" "\0"
+            VALUE "ProductName", "surveillance_system" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

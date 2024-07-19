@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
-import 'NotificationsProvider .dart';
+import 'backcamera.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => NotificationsProvider(),
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -31,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Remove the debug banner
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: LoginScreen(),//HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
+      home: LoginScreen(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
     );
   }
 }

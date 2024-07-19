@@ -1,4 +1,4 @@
-# real_time_home_surveillance_system
+# surveillance_system
 
 A new Flutter project.
 

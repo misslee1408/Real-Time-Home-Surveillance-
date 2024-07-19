@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'backcamera.dart';
+import 'package:flutter/material.dart';
+import 'HomeScreen.dart';
+import 'create_account_screen.dart';
+import 'package:flutter/cupertino.dart';
 
 class AddCameraScreen extends StatelessWidget {
   @override
@@ -59,10 +61,7 @@ class AddCameraScreen extends StatelessWidget {
                           SizedBox(height: 100),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => CameraScreen()),
-                              );
+                              // Handle add camera button press
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
