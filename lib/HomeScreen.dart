@@ -1,9 +1,42 @@
 import 'package:flutter/material.dart';
-
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
+import 'footages.dart';
+import 'ProfilePage.dart';
+import 'SettingsPage.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 1; // Set default selected index
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 1:
+      // Handle home button
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +84,24 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(height: 20),
                         MenuButton(
+                          icon: Icons.camera_alt_outlined,
+                          text: 'Cameras',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => RecordedPage()),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        MenuButton(
                           icon: Icons.photo,
                           text: 'Footages',
                           onPressed: () {
-                            // Handle button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => FootagesPage()),
+                            );
                           },
                         ),
                       ],
@@ -86,25 +133,25 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.person, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddCameraScreen()),
-                      );
-                    },
+                    icon: Icon(
+                      Icons.person,
+                      color: _selectedIndex == 0 ? Colors.red : Colors.white,
+                    ),
+                    onPressed: () => _onItemTapped(0),
                   ),
                   IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
+                    icon: Icon(
+                      Icons.home,
+                      color: _selectedIndex == 1 ? Colors.red : Colors.white,
+                    ),
+                    onPressed: () => _onItemTapped(1),
                   ),
                   IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
+                    icon: Icon(
+                      Icons.settings,
+                      color: _selectedIndex == 2 ? Colors.red : Colors.white,
+                    ),
+                    onPressed: () => _onItemTapped(2),
                   ),
                 ],
               ),
@@ -127,7 +174,8 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black, backgroundColor: Colors.white,
+        primary: Colors.white,
+        onPrimary: Colors.black,
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         minimumSize: Size(300, 60), // Set a fixed size for the buttons
         shape: RoundedRectangleBorder(
