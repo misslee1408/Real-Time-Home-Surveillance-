@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'CameraControlWidget.dart';
+import 'RecordedPages.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -42,7 +43,10 @@ class HomePage extends StatelessWidget {
                           icon: Icons.videocam,
                           text: 'Live streaming view',
                           onPressed: () {
-                            // Handle button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => RecordedPage()),
+                            );
                           },
                         ),
                         SizedBox(height: 20),
