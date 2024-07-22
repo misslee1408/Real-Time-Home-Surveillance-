@@ -1,12 +1,18 @@
+from flask import Flask, render_template, request
 from twilio.rest import Client
+import config
 import firebase_admin
-from firebase_admin import credentials, storage
-from dotenv import load_dotenv
-import tempfile
+from firebase_admin import credentials, firestore, storage
 import os
+from werkzeug.utils import secure_filename
+import tempfile
 
-# Load environment variables from .env file
-load_dotenv()
+app = Flask(__name__)
+
+# Your Account SID and Auth Token from twilio.com/console
+account_sid = config.TWILIO_ACCOUNT_SID
+auth_token = config.TWILIO_AUTH_TOKEN
+client = Client(account_sid, auth_token)
 
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS_PATH"))
@@ -14,47 +20,57 @@ firebase_admin.initialize_app(cred, {
     'storageBucket': os.getenv("FIREBASE_STORAGE_BUCKET")
 })
 
-# Initialize Firebase Storage
+# Firestore client
+db = firestore.client()
 bucket = storage.bucket()
 
-# Initialize Twilio client
-account_sid = os.getenv("TWILIO_ACCOUNT_SID")
-auth_token = os.getenv("TWILIO_AUTH_TOKEN")
-client = Client(account_sid, auth_token)
-
 def send_motion_alert(phone_number, message):
-    # Send motion alert message via Twilio
     message = client.messages.create(
         body=message,
-        from_=os.getenv("TWILIO_PHONE_NUMBER"),
+        from_=config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
         to=phone_number
     )
     return message.sid
 
-def upload_file_to_firebase(file_path, filename):
-    # Upload file to Firebase Storage
-    blob = bucket.blob(filename)
-    blob.upload_from_filename(file_path)
-    blob.make_public()
-    return blob.public_url
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-if __name__ == "__main__":
-    # Example usage:
+@app.route('/motion_detected', methods=['POST'])
+def motion_detected():
     phone_number = '+265881978126'
     message = "Motion detected in your home. Check your security camera for more details."
+    
+    # Handle file upload
+    if 'photo' not in request.files:
+        return "No file part"
+    file = request.files['photo']
+    if file.filename == '':
+        return "No selected file"
+    if file:
+        filename = secure_filename(file.filename)
+        
+        # Create a temporary directory to save the file
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            file_path = os.path.join(tmpdirname, filename)
+            file.save(file_path)
 
-    # Send motion alert message
-    message_sid = send_motion_alert(phone_number, message)
-    print(f"Message sent with SID: {message_sid}")
+            # Upload the file to Firebase Storage
+            blob = bucket.blob(filename)
+            blob.upload_from_filename(file_path)
+            blob.make_public()  # Make the file public, you can control access differently if needed
+            photo_url = blob.public_url
 
-    # Upload a sample file to Firebase Storage
-    with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
-        tmpfile.write(b"Sample content")  # Replace with actual file content
-        tmpfile_path = tmpfile.name
-        filename = os.path.basename(tmpfile_path)
+        # Log the alert in Firestore
+        alert_data = {
+            'phone_number': phone_number,
+            'message': message,
+            'message_sid': send_motion_alert(phone_number, message),
+            'photo_url': photo_url
+        }
+        db.collection('alerts').add(alert_data)
 
-        # Upload file to Firebase Storage
-        photo_url = upload_file_to_firebase(tmpfile_path, filename)
-        print(f"File uploaded to Firebase Storage: {photo_url}")
+    return f"Message sent with SID: {alert_data['message_sid']} and photo uploaded to {photo_url}"
 
-        os.remove(tmpfile_path)  # Clean up temp file
+if __name__ == "__main__":
+    app.run(debug=True)
