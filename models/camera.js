@@ -1,5 +1,3 @@
-// bsc-com-26-29 (liana chagunda)
-//camera details
 module.exports = (sequelize, DataTypes) => {
   const Camera = sequelize.define('Camera', {
     name: {
@@ -9,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     location: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    streamurl: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     isActive: {
       type: DataTypes.BOOLEAN,
