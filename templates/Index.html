@@ -16,6 +16,10 @@
         .container {
             text-align: center;
         }
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
+        }
         button {
             background-color: blue;
             color: white;
@@ -33,7 +37,8 @@
 <body>
     <div class="container">
         <h1>Motion Detection Alert</h1>
-        <form action="/motion_detected" method="post">
+        <form action="/motion_detected" method="post" enctype="multipart/form-data">
+            <input type="file" name="photo" accept="image/*" required>
             <button type="submit">Send Motion Alert</button>
         </form>
     </div>
