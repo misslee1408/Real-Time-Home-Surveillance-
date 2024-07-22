@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
 import 'backcamera.dart';
-import 'footages.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,8 +26,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Remove the debug banner
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home:
-          LoginScreen(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
+      home: LoginScreen(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
     );
   }
 }

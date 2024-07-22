@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surveillance_system/SettingsPage';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
@@ -174,8 +175,7 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
-        onPrimary: Colors.black,
+        foregroundColor: Colors.black, backgroundColor: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         minimumSize: Size(300, 60), // Set a fixed size for the buttons
         shape: RoundedRectangleBorder(
