@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'ControlsOverlay.dart';
+
 class RecordedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -166,4 +168,3 @@ class RecordedPage extends StatelessWidget {
     );
   }
 }
-

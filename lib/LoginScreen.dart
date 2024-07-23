@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.visibility), // Using Material Icons
+                  suffixIcon: Icon(Icons.visibility),
                 ),
               ),
               SizedBox(height: 10),

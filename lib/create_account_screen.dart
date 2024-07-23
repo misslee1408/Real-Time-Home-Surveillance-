@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'user_api_service.dart'; // Import the file where UserApiService is defined
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -12,16 +13,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _passwordController = TextEditingController();
   bool _isActive = true; // Default value
 
-  final ApiService _apiService = ApiService();
+  final UserApiService _userApiService = UserApiService();
 
   void _addUser() async {
     final fullName = _fullNameController.text;
-    final username = _userNameController.text;
+    final username = _userNameController.text; // Email is captured here
     final phone = _phoneController.text;
     final password = _passwordController.text;
 
     try {
-      await _apiService.addUser(fullName, username, phone, password, _isActive);
+      await _userApiService.addUser(username, username, password, _isActive); // Adjusted to match the method signature
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User added successfully')));
       Navigator.pop(context); // Return to the previous screen
     } catch (e) {
@@ -50,7 +51,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextField(
                 controller: _fullNameController,
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Full name',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -58,18 +59,18 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextField(
                 controller: _userNameController,
                 decoration: InputDecoration(
-                  labelText: ' Email',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),
-              // SizedBox(height: 10),
-              // TextField(
-              //   controller: _phoneController,
-              //   decoration: InputDecoration(
-              //     labelText: 'Phone number',
-              //     border: OutlineInputBorder(),
-              //   ),
-              // ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Phone number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
               SizedBox(height: 10),
               TextField(
                 controller: _passwordController,
@@ -80,14 +81,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   suffixIcon: Icon(Icons.visibility),
                 ),
               ),
-               SizedBox(height: 10),
-              TextField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  labelText: 'Phone number',
-                  border: OutlineInputBorder(),
-                ),
-              ), 
               SizedBox(height: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +90,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   Text('* Must include at least one uppercase letter (A-Z)'),
                   Text('* Must include at least one lowercase letter (a-z)'),
                   Text('* Must include at least one digit (0-9)'),
-                  Text('* Must include at least one special character (e.g., !, @, #,  %, ^, &, *)'),
+                  Text('* Must include at least one special character (e.g., !, @, #, %, ^, &, *)'),
                 ],
               ),
               SizedBox(height: 20),
@@ -121,11 +114,5 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
       ),
     );
-  }
-}
-
-class ApiService {
-  Future<void> addUser(String fullName, String username, String phone, String password, bool isActive) async {
-    // Implement your API call here to register the user
   }
 }
