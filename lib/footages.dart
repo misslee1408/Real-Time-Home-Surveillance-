@@ -49,7 +49,7 @@ class FootagesPage extends StatelessWidget {
               bottom: 80,
               child: ListView(
                 children: [
-                  FootageItem(title: 'footage_9_1721029940084'),
+                  FootageItem(title: 'footage_9_1721029940084'),//to be made dynamic
                   SizedBox(height: 10),
                   FootageItem(title: 'footage_9_1721028078007'),
                   SizedBox(height: 10),

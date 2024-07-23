@@ -49,8 +49,6 @@ class AddCameraScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomTextField(hintText: 'Camera ID'),
-                          SizedBox(height: 20),
                           CustomTextField(hintText: 'Camera name'),
                           SizedBox(height: 20),
                           CustomTextField(hintText: 'Location'),

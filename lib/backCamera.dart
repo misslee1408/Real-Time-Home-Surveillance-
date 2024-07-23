@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surveillance_system/record';
+import 'record.dart';
 class CameraScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

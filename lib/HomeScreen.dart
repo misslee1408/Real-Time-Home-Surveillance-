@@ -3,8 +3,8 @@ import 'package:surveillance_system/SettingsPage';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
-import 'ProfilePage.dart';
-import 'SettingsPage.dart';
+import 'ProfilePage.dart'; // Import ProfilePage
+import 'SettingsPage.dart'; // Import SettingsPage
 
 class HomePage extends StatefulWidget {
   @override

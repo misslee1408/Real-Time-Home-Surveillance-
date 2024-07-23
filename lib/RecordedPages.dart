@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'ControlsOverlay.dart';
 class RecordedPage extends StatelessWidget {
   @override
@@ -83,12 +84,12 @@ class RecordedPage extends StatelessWidget {
                 children: [
                   CameraFeedWidget(
                     title: 'Front Door',
-                    videoUrl: 'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/BvRTGIUmKktszeuj9/videoblocks-nested-sequence-89_hvlqqfw3c__20dba14b6050836e9f80e1bcdb104e75__P360.mp4y',
+                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'Back Door',
-                    videoUrl: 'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/A039Hsw/establishing-walking-shot-through-an-old-hallway-to-a-door-4k_buunrdlil__7494a2abdb58c241122f9ab481b46eb9__P360.mp4',
+                    videoUrl: 'https://www.w3schools.com/html/movie.mp4',
                   ),
                 ],
               ),
