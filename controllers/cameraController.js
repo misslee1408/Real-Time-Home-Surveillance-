@@ -1,53 +1,53 @@
 const { Camera } = require('../models');
 
-// Fetch all cameras
-exports.getAllCameras = async (req, res) => {
-  try {
-    const cameras = await Camera.findAll();
-    res.json(cameras);
-  } catch (error) {
-    console.error('Error fetching cameras:', error.message);
-    res.status(500).json({ error: 'Failed to fetch cameras' });
-  }
-};
-
-
-// Add a new camera
 exports.addCamera = async (req, res) => {
   try {
-    const camera = await Camera.create(req.body);
-    res.status(201).json(camera);
+    const { name, location, streamurl, isActive } = req.body;
+    const newCamera = await Camera.create({ name, location, streamurl, isActive });
+    res.status(201).json(newCamera);
   } catch (error) {
-    res.status(500).json({ error: 'oops! Failed to add camera' });
+    res.status(500).json({ error: 'Failed to add camera' });
   }
 };
 
-// Fetch a single camera by its ID
+exports.getCameras = async (req, res) => {
+  try {
+    const cameras = await Camera.findAll();
+    res.status(200).json(cameras);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve cameras' });
+  }
+};
+
+
+/* This function retrieves a camera based on its ID from the database.
+It uses findByPk method to find a camera by its primary key (ID).
+If found, it returns the camera data; otherwise, it returns a 404 status with an error message. */
+
 exports.getCameraById = async (req, res) => {
   try {
-    const camera = await Camera.findByPk(req.params.id);
+    const { id } = req.params;
+    const camera = await Camera.findByPk(id);
     if (camera) {
-      res.json(camera);
+      res.status(200).json(camera);
     } else {
-      res.status(404).json({ error: 'oh oh! Camera not found' });
+      res.status(404).json({ error: 'Camera not found' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'oops Failed to fetch camera' });
+    res.status(500).json({ error: 'Failed to retrieve camera' });
   }
 };
 
-// Delete a camera by its ID
 exports.deleteCamera = async (req, res) => {
   try {
-    const deleted = await Camera.destroy({
-      where: { id: req.params.id }
-    });
+    const { id } = req.params;
+    const deleted = await Camera.destroy({ where: { id } });
     if (deleted) {
       res.status(204).json();
     } else {
-      res.status(404).json({ error: 'oh oh Camera not found' });
+      res.status(404).json({ error: 'Camera not found' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'oops! Failed to delete camera' });
+    res.status(500).json({ error: 'Failed to delete camera' });
   }
 };

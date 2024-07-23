@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 const { sequelize } = require('./models');
 const app = express();
@@ -8,8 +10,8 @@ const cameraController = require('./controllers/cameraController');
 
 
 // Middleware to parse JSON and urlencoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.json());
 
 
 // Serve static files from the "public" directory

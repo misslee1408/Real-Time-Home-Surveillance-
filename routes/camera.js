@@ -1,15 +1,10 @@
 const express = require('express');
-const {
-  getAllCameras,
-  addCamera,
-  getCameraById,
-  deleteCamera
-} = require('../controllers/cameraController');
+const { addCamera, getCameras, getCameraById, deleteCamera } = require('../controllers/cameraController');
 
 const router = express.Router();
 
-router.get('/', getAllCameras);
-router.post('/', addCamera);
+router.post('/add', addCamera);
+router.get('/', getCameras);
 router.get('/:id', getCameraById);
 router.delete('/:id', deleteCamera);
 
