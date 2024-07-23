@@ -1,127 +1,78 @@
 import 'package:flutter/material.dart';
+import 'CameraControlWidget.dart';
+import 'api_service.dart';
+import 'live_stream_screen.dart'; // Import the live stream screen
 
-class CameraPage extends StatelessWidget {
+class CameraPage extends StatefulWidget {
+  @override
+  _CameraPageState createState() => _CameraPageState();
+}
+
+class _CameraPageState extends State<CameraPage> {
+  late Future<List<Camera>> futureCameras;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCameras();
+  }
+
+  void _refreshCameras() {
+    setState(() {
+      futureCameras = ApiService().getCameras();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Background image
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.jpeg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            // Back button
-            Positioned(
-              top: 10,
-              left: 10,
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context);
+      appBar: AppBar(title: Text('Cameras')),
+      body: FutureBuilder<List<Camera>>(
+        future: futureCameras,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Camera camera = snapshot.data![index];
+                return ListTile(
+                  title: Text(camera.name),
+                  subtitle: Text(camera.location),
+                  trailing: Switch(
+                    value: camera.isActive,
+                    onChanged: (value) {
+                      // Handle switch toggle if needed
                     },
                   ),
-                  SizedBox(width: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      children: [
-                        Icon(Icons.circle, color: Colors.white, size: 10),
-                        SizedBox(width: 5),
-                        Text(
-                          'Live',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Record button section
-            Positioned(
-              bottom: MediaQuery.of(context).size.height / 2 - 30,
-              left: 20,
-              right: 20,
-              child: Center(
-                child: Container(
-                  width: 300,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Record',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LiveStreamScreen(camera: camera),
                       ),
-                      SizedBox(width: 100),
-                      Switch(
-                        value: true, // Change this to a variable to handle state
-                        onChanged: (value) {
-                          // Handle switch toggle
-                        },
-                        activeColor: Colors.black,
-                        activeTrackColor: Colors.grey,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // Bottom navigation buttons
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.person, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context); // Go back to the previous screen
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {
-                      // Handle button press
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                    );
+                  },
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Failed to load cameras'));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Navigate to add camera screen
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddCameraScreen()),
+          );
+          if (result == true) {
+            _refreshCameras(); // Refresh the list after adding a new camera
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

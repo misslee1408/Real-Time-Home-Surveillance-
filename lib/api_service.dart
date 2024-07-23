@@ -24,12 +24,18 @@ class ApiService {
   }
 
   Future<List<Camera>> getCameras() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    try {
+      final response = await http.get(Uri.parse(baseUrl));
 
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((camera) => Camera.fromJson(camera)).toList();
-    } else {
+      if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+        return jsonResponse.map((camera) => Camera.fromJson(camera)).toList();
+      } else {
+        print('Failed to load cameras: ${response.body}');
+        throw Exception('Failed to load cameras');
+      }
+    } catch (error) {
+      print('Error fetching cameras: $error');
       throw Exception('Failed to load cameras');
     }
   }
