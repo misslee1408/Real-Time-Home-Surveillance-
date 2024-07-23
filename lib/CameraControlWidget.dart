@@ -1,8 +1,33 @@
 import 'package:flutter/material.dart';
+import 'api_service.dart';
 
-import 'backcamera.dart';
+class AddCameraScreen extends StatefulWidget {
+  @override
+  _AddCameraScreenState createState() => _AddCameraScreenState();
+}
 
-class AddCameraScreen extends StatelessWidget {
+class _AddCameraScreenState extends State<AddCameraScreen> {
+  final _cameraNameController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _urlController = TextEditingController();
+  bool _isActive = true; // Default value
+
+  final ApiService _apiService = ApiService();
+
+  void _addCamera() async {
+    final name = _cameraNameController.text;
+    final location = _locationController.text;
+    final streamurl = _urlController.text;
+
+    try {
+      await _apiService.addCamera(name, location, streamurl, _isActive);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Camera added successfully')));
+      Navigator.pop(context); // Return to the previous screen
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add camera')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,21 +74,24 @@ class AddCameraScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomTextField(hintText: 'Camera ID'),
+                          CustomTextField(controller: _cameraNameController, hintText: 'Camera name'),
                           SizedBox(height: 20),
-                          CustomTextField(hintText: 'Camera name'),
+                          CustomTextField(controller: _locationController, hintText: 'Location'),
                           SizedBox(height: 20),
-                          CustomTextField(hintText: 'Location'),
+                          CustomTextField(controller: _urlController, hintText: 'URL'),
                           SizedBox(height: 20),
-                          CustomTextField(hintText: 'URL'),
+                          SwitchListTile(
+                            title: Text('Is Active', style: TextStyle(color: Colors.white)),
+                            value: _isActive,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _isActive = value;
+                              });
+                            },
+                          ),
                           SizedBox(height: 100),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => CameraScreen()),
-                              );
-                            },
+                            onPressed: _addCamera,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
@@ -115,12 +143,14 @@ class AddCameraScreen extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
+  final TextEditingController controller;
 
-  CustomTextField({required this.hintText});
+  CustomTextField({required this.hintText, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hintText,

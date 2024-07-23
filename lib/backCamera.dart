@@ -1,122 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:surveillance_system/record';
-class CameraScreen extends StatelessWidget {
+import 'api_service.dart';
+
+class CameraListScreen extends StatefulWidget {
+  @override
+  _CameraListScreenState createState() => _CameraListScreenState();
+}
+
+class _CameraListScreenState extends State<CameraListScreen> {
+  late Future<List<Camera>> futureCameras;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCameras = ApiService().getCameras();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.jpeg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Text(
-                        'CAMERAS',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+      appBar: AppBar(title: Text('Cameras')),
+      body: FutureBuilder<List<Camera>>(
+        future: futureCameras,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Camera camera = snapshot.data![index];
+                return ListTile(
+                  title: Text(camera.name),
+                  subtitle: Text(camera.location),
+                  trailing: Switch(
+                    value: camera.isActive,
+                    onChanged: (value) {},
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CameraPage()),
-                      );
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera_alt, color: Colors.black),
-                          SizedBox(width: 10),
-                          Text(
-                            'BACK DOOR CAMERA',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 90,
-              right: 30,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Handle button press
-                },
-                child: Icon(Icons.add),
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.person, color: Colors.white),
-                    onPressed: () {
-                      // Handle person button press
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {
-                      // Handle home button press
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {
-                      // Handle settings button press
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Failed to load cameras'));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
