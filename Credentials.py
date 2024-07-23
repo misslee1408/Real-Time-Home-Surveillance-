@@ -9,16 +9,23 @@ import tempfile
 
 app = Flask(__name__)
 
-# Your Account SID and Auth Token from twilio.com/console
-account_sid = config.TWILIO_ACCOUNT_SID
-auth_token = config.TWILIO_AUTH_TOKEN
-client = Client(account_sid, auth_token)
-
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS_PATH"))
 firebase_admin.initialize_app(cred, {
     'storageBucket': os.getenv("FIREBASE_STORAGE_BUCKET")
 })
+
+# Firestore client
+db = firestore.client()
+bucket = storage.bucket()
+
+
+# Your Account SID and Auth Token from twilio.com/console
+account_sid = config.TWILIO_ACCOUNT_SID
+auth_token = config.TWILIO_AUTH_TOKEN
+client = Client(account_sid, auth_token)
+
+
 
 # Set the upload folder
 UPLOAD_FOLDER = 'uploads'
@@ -28,17 +35,12 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Firestore client
-db = firestore.client()
-bucket = storage.bucket()
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-def send_motion_alert(phone_number, message):
-    message = client.messages.create(
-        body=message,
-        from_=config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
-        to=phone_number
-    )
-    return message.sid
+
+
 
 @app.route('/')
 def home():
@@ -82,3 +84,10 @@ def motion_detected():
 
 if __name__ == "__main__":
     app.run(debug=True)
+def send_motion_alert(phone_number, message):
+    message = client.messages.create(
+        body=message,
+        from_=config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
+        to=phone_number
+    )
+    return message.sid
