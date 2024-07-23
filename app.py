@@ -1,9 +1,22 @@
 from flask import Flask, Response
 from flask_cors import CORS
 import cv2
+from flask_httpauth import HTTPBasicAuth
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)# Enable CORS for allroutes
+auth = HTTPBasicAuth()
+
+# Replace with your own username and password
+users = {
+    "admin": "password"
+}
+
+@auth.get_password
+def get_pw(username):
+    if username in users:
+        return users.get(username)
+    return None
 
 def generate_frames():
     camera = cv2.VideoCapture(0)  # Use your camera index if different
@@ -18,8 +31,11 @@ def generate_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/')
+@auth.login_required
 def index():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(host='41.70.47.48', port=8555)
+    app.run(host='0.0.0.0', port=8555)
+ 
+
