@@ -1,4 +1,4 @@
-//This file sets up routes for handling HTTP requests related to users.
+// routes/user.js
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
