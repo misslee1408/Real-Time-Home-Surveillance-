@@ -6,12 +6,39 @@ const path = require('path');
 const { sequelize } = require('./models');
 const Nexmo = require('nexmo');
 const cameraController = require('./controllers/cameraController');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON and urlencoded data
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:6256/', // Replace with your frontend URL
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
+
+
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Use the environment variable for the secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Use the environment variable for the secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 app.use(bodyParser.json());
 
 // Serve static files from the "public" directory
