@@ -40,11 +40,15 @@ def index():
     return render_template('index.html')
 
 
-
-
-@app.route('/')
-def home():
-    return render_template('index.html')
+@app.route('/add_video', methods = ['POST'])
+def add_video():
+    if 'video' not in request.files:
+        return jsonify({"error": "No video part in the request"}), 400
+    
+    file = request.files['video']
+    
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
 
 @app.route('/motion_detected', methods=['POST'])
 def motion_detected():
