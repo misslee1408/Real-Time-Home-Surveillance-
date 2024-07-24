@@ -24,8 +24,8 @@ bucket = storage.bucket()
 # Your Account SID and Auth Token from twilio.com/console
 account_sid = config.TWILIO_ACCOUNT_SID
 auth_token = config.TWILIO_AUTH_TOKEN
-TWILIO_PHONE_NUMBER = '+13342923081'
-USER_PHONE_NUMBER = '+265883031860'
+TWILIO_PHONE_NUMBER = config.TWILIO_PHONE_NUMBER 
+USER_PHONE_NUMBER = config.USER_PHONE_NUMBER
 client = Client(account_sid, auth_token)
 
 
