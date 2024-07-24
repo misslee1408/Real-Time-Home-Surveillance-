@@ -1,6 +1,64 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'ControlsOverlay.dart';
-class RecordedPage extends StatelessWidget {
+
+
+class RecordedPage extends StatefulWidget {
+  @override
+  _RecordedPageState createState() => _RecordedPageState();
+}
+
+class _RecordedPageState extends State<RecordedPage> {
+  bool isRecording = false;
+
+  Future<void> startRecording(String cameraUrl) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/recording/start-recording'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'cameraUrl': cameraUrl,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Recording started successfully
+      final responseBody = jsonDecode(response.body);
+      print('Recording started: ${responseBody['filePath']}');
+    } else {
+      // Failed to start recording
+      print('Failed to start recording');
+    }
+  }
+
+  Future<void> stopRecording() async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/recording/stop-recording'),
+    );
+
+    if (response.statusCode == 200) {
+      // Recording stopped successfully
+      final responseBody = jsonDecode(response.body);
+      print('Recording stopped: ${responseBody['filePath']}');
+    } else {
+      // Failed to stop recording
+      print('Failed to stop recording');
+    }
+  }
+
+  void _toggleRecording(String cameraUrl) {
+    setState(() {
+      isRecording = !isRecording;
+      if (isRecording) {
+        startRecording(cameraUrl);
+      } else {
+        stopRecording();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +90,7 @@ class RecordedPage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height / 2.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/background.jpeg'),
+                    image: AssetImage(''),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -83,12 +141,12 @@ class RecordedPage extends StatelessWidget {
                 children: [
                   CameraFeedWidget(
                     title: 'Front Door',
-                    videoUrl: 'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/BvRTGIUmKktszeuj9/videoblocks-nested-sequence-89_hvlqqfw3c__20dba14b6050836e9f80e1bcdb104e75__P360.mp4y',
+                    videoUrl: 'https://10.139.133.72:8080/video',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'Back Door',
-                    videoUrl: 'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/A039Hsw/establishing-walking-shot-through-an-old-hallway-to-a-door-4k_buunrdlil__7494a2abdb58c241122f9ab481b46eb9__P360.mp4',
+                    videoUrl: 'https://10.139.133.72:8080/video',
                   ),
                 ],
               ),
@@ -119,9 +177,9 @@ class RecordedPage extends StatelessWidget {
                       ),
                       SizedBox(width: 100),
                       Switch(
-                        value: true, // Change this to a variable to handle state
+                        value: isRecording,
                         onChanged: (value) {
-                          // Handle switch toggle
+                          _toggleRecording('http://your-camera-url');
                         },
                         activeColor: Colors.black,
                         activeTrackColor: Colors.grey,
@@ -166,4 +224,3 @@ class RecordedPage extends StatelessWidget {
     );
   }
 }
-
