@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, render_template, request
 from twilio.rest import Client
 import config
@@ -49,6 +50,19 @@ def add_video():
     
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
+    
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        # Store video metadata in Firestore
+        timestamp = datetime.now().isoformat()
+        doc_ref = db.collection('VideoCollection').document()
+        doc_ref.set({
+            'filename': filename,
+            'timestamp': timestamp
+        })
 
 @app.route('/motion_detected', methods=['POST'])
 def motion_detected():
