@@ -24,11 +24,11 @@ exports.registerUser = async (req, res) => {
 
 // Login user
 exports.loginUser = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
         // Find user
-        const user = await User.findOne({ where: { username } });
+        const user = await User.findOne({ where: { email } });
         if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
         // Check password
@@ -43,7 +43,6 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// Existing methods
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll();
