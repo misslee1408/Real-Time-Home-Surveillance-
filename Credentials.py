@@ -24,6 +24,8 @@ bucket = storage.bucket()
 # Your Account SID and Auth Token from twilio.com/console
 account_sid = config.TWILIO_ACCOUNT_SID
 auth_token = config.TWILIO_AUTH_TOKEN
+TWILIO_PHONE_NUMBER = '+13342923081'
+USER_PHONE_NUMBER = '+265883031860'
 client = Client(account_sid, auth_token)
 
 
@@ -63,6 +65,16 @@ def add_video():
             'filename': filename,
             'timestamp': timestamp
         })
+
+
+ # Send SMS notification
+        message = client.messages.create(
+            body=f"Motion detected! Video ID: {doc_ref.id}, Time: {timestamp}",
+            from_=TWILIO_PHONE_NUMBER,
+            to=USER_PHONE_NUMBER
+        )
+
+
 
 @app.route('/motion_detected', methods=['POST'])
 def motion_detected():
