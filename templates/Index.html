@@ -3,44 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motion Alert</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
+    <title>Video Submission</title>
+    <script>
+        async function submitVideo() {
+            const videoInput = document.getElementById('video');
+            const file = videoInput.files[0];
+            
+            if (!file) {
+                document.getElementById('result').innerText = 'No video selected.';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', file);
+
+            const response = await fetch('/add_video', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById('result').innerText = 'Video ID: ' + result.document_id + '\nTimestamp: ' + result.timestamp;
+            } else {
+                document.getElementById('result').innerText = 'Error: ' + result.error;
+            }
         }
-        .container {
-            text-align: center;
-        }
-        input[type="file"] {
-            display: block;
-            margin: 20px auto;
-        }
-        button {
-            background-color: blue;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: darkblue;
-        }
-    </style>
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Motion Detection Alert</h1>
-        <form action="/motion_detected" method="post" enctype="multipart/form-data">
-            <input type="file" name="photo" accept="image/*" required>
-            <button type="submit">Send Motion Alert</button>
-        </form>
-    </div>
+    <h1>Submit Video</h1>
+    <input type="file" id="video" name="video" accept="video/*">
+    <br><br>
+    <button onclick="submitVideo()">Submit</button>
+    <p id="result"></p>
+    <br>
+    <a href="/videos">View Uploaded Videos</a>
 </body>
 </html>
