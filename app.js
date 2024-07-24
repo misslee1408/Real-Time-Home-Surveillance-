@@ -44,10 +44,6 @@ app.use(bodyParser.json());
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Import and use stream routes
-const streamRoutes = require('./routes/stream');
-app.use('/api/stream/', streamRoutes);
-
 // Import and use camera routes
 const cameraRoutes = require('./routes/camera');
 app.use('/api/cameras', cameraRoutes);
@@ -59,10 +55,6 @@ app.use('/api/users', userRoutes);
 // Import and use recording routes
 const recordingRoutes = require('./routes/recording');
 app.use('/api/recording', recordingRoutes);
-
-// // Import and use motion detection routes
-// const motionRoutes = require('./routes/motion');
-// app.use('/api/motion', motionRoutes);
 
 // Test database connection
 sequelize.authenticate()
