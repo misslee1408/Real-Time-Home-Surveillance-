@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'api_service.dart'; // ApiService
+import 'api_service.dart';
 
 class AddCameraScreen extends StatefulWidget {
   @override
@@ -7,22 +7,22 @@ class AddCameraScreen extends StatefulWidget {
 }
 
 class _AddCameraScreenState extends State<AddCameraScreen> {
-  final _cameraIdController = TextEditingController();
   final _cameraNameController = TextEditingController();
   final _locationController = TextEditingController();
   final _urlController = TextEditingController();
+  bool _isActive = true; // Default value
 
   final ApiService _apiService = ApiService();
 
   void _addCamera() async {
     final name = _cameraNameController.text;
     final location = _locationController.text;
-    final url = _urlController.text;
+    final streamurl = _urlController.text;
 
     try {
-      await _apiService.addCamera(name, location, url);
+      await _apiService.addCamera(name, location, streamurl, _isActive);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Camera added successfully')));
-      // Optionally, navigate to another screen or refresh the list
+      Navigator.pop(context); // Return to the previous screen
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add camera')));
     }
@@ -74,13 +74,21 @@ class _AddCameraScreenState extends State<AddCameraScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomTextField(controller: _cameraIdController, hintText: 'Camera ID'),
-                          SizedBox(height: 20),
                           CustomTextField(controller: _cameraNameController, hintText: 'Camera name'),
                           SizedBox(height: 20),
                           CustomTextField(controller: _locationController, hintText: 'Location'),
                           SizedBox(height: 20),
                           CustomTextField(controller: _urlController, hintText: 'URL'),
+                          SizedBox(height: 20),
+                          SwitchListTile(
+                            title: Text('Is Active', style: TextStyle(color: Colors.white)),
+                            value: _isActive,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _isActive = value;
+                              });
+                            },
+                          ),
                           SizedBox(height: 100),
                           ElevatedButton(
                             onPressed: _addCamera,
@@ -146,7 +154,7 @@ class CustomTextField extends StatelessWidget {
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.white54),
+        hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.white),

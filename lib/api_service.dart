@@ -23,18 +23,6 @@ class ApiService {
     }
   }
 
-<<<<<<< HEAD
-  Future<List<dynamic>> getCameras() async {
-    final response = await http.get(Uri.parse('$baseUrl/cameras'));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load cameras');
-    }
-  }
-}
-=======
   Future<List<Camera>> getCameras() async {
     try {
       final response = await http.get(Uri.parse(baseUrl));
@@ -78,4 +66,3 @@ class Camera {
     );
   }
 }
->>>>>>> 8c5199b4f3c61de37d55ba9ca6677433f78f7f3f
