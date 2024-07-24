@@ -1,4 +1,4 @@
-// Example model definition: models/user.js
+// models/user.js
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
