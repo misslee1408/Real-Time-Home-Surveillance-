@@ -61,44 +61,42 @@ class _LiveVideoStreamingWidgetState extends State<LiveVideoStreamingWidget> {
           color: Colors.black,
           child: Center(
             child: _controller.value.isInitialized
-                ? Stack(
-              alignment: Alignment.center,
-              children: [
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
-                IconButton(
-                  icon: Icon(
-          height: MediaQuery.of(context).size.height * 0.5,
-          color: Colors.black,
-          child: Center(
-            child: _controller.value.isInitialized
                 ? GestureDetector(
-              onTap: _togglePlayPause,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  ),
-                  Icon(
-                    _isPlaying ? Icons.pause_circle : Icons.play_circle,
-                    color: Colors.white,
-                    size: 50.0,
-                  ),
-                  onPressed: _togglePlayPause,
-                ),
-              ],
-                ],
-              ),
-            )
+                    onTap: _togglePlayPause,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        ),
+                        Icon(
+                          _isPlaying ? Icons.pause_circle : Icons.play_circle,
+                          color: Colors.white,
+                          size: 50.0,
+                        ),
+                        Positioned(
+                          top: 10,
+                          left: 10,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                            color: Colors.red,
+                            child: Text(
+                              'LIVE',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 : CircularProgressIndicator(),
           ),
         ),
         if (_controller.value.isInitialized)
-          VideoProgressIndicator(_controller, allowScrubbing: true),
           Column(
             children: [
               GestureDetector(

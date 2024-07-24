@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:surveillance_system/SettingsPage';
+import 'SettingsPage.dart';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
