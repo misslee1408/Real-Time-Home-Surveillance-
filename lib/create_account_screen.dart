@@ -1,3 +1,4 @@
+// pages/create_account_screen.dart
 import 'package:flutter/material.dart';
 import 'user_api_service.dart'; // Import the file where UserApiService is defined
 
@@ -7,26 +8,29 @@ class CreateAccountScreen extends StatefulWidget {
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
-  final _fullNameController = TextEditingController();
   final _userNameController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isActive = true; // Default value
 
   final UserApiService _userApiService = UserApiService();
 
   void _addUser() async {
-    final fullName = _fullNameController.text;
-    final username = _userNameController.text; // Email is captured here
-    final phone = _phoneController.text;
+    final username = _userNameController.text;
+    final email = _emailController.text;
     final password = _passwordController.text;
 
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+
     try {
-      await _userApiService.addUser(username, username, password, _isActive); // Adjusted to match the method signature
+      await _userApiService.addUser(username, email, password, _isActive);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User added successfully')));
       Navigator.pop(context); // Return to the previous screen
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add user')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add user: $e')));
     }
   }
 
@@ -49,25 +53,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextField(
-                controller: _fullNameController,
-                decoration: InputDecoration(
-                  labelText: 'Full name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
                 controller: _userNameController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Username',
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 10),
               TextField(
-                controller: _phoneController,
+                controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Phone number',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),

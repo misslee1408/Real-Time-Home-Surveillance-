@@ -1,8 +1,9 @@
+// pages/login_screen.dart
 import 'package:flutter/material.dart';
-import 'HomeScreen.dart';
-import 'create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'user_api_service.dart';  // Adjust the import path as needed
+import 'create_account_screen.dart';
+import 'HomeScreen.dart'; // Import the file where HomeScreen is defined
+import 'user_api_service.dart'; // Import the file where UserApiService is defined
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,14 +19,20 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+
     try {
       final response = await _userApiService.loginUser(email, password);
-      if (response['message'] == 'Login successful') {
+      if (response.containsKey('token')) {
         // Save user session
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('isLoggedIn', true);
         prefs.setString('username', response['user']['username']);
         prefs.setString('email', response['user']['email']);
+        prefs.setString('token', response['token']);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login successful')),
@@ -38,12 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response['message'])),
+          SnackBar(content: Text('Login failed: ${response['message']}')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to login')),
+        SnackBar(content: Text('Failed to login: $e')),
       );
     }
   }
@@ -65,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Username / email',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),
