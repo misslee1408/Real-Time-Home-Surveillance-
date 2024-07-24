@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from twilio.rest import Client
 import config
 import firebase_admin
@@ -70,54 +70,28 @@ def add_video():
  # Send SMS notification
         message = client.messages.create(
             body=f"Motion detected! Video ID: {doc_ref.id}, Time: {timestamp}",
-            from_=TWILIO_PHONE_NUMBER,
-            to=USER_PHONE_NUMBER
+            from_=config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
+        to=phone_number
         )
 
+    return jsonify({
+            "document_id": doc_ref.id,
+            "timestamp": timestamp
+        })
 
+@app.route('/videos')
+def videos():
+    # Fetch video metadata from Firestore
+    videos = []
+    docs = db.collection('VideoCollection').stream()
+    for doc in docs:
+        videos.append(doc.to_dict())
 
-@app.route('/motion_detected', methods=['POST'])
-def motion_detected():
-    phone_number = '+265881978126'
-    message = "Motion detected in your home. Check your security camera for more details."
-    
-    # Handle file upload
-    if 'photo' not in request.files:
-        return "No file part"
-    file = request.files['photo']
-    if file.filename == '':
-        return "No selected file"
-    if file:
-        filename = secure_filename(file.filename)
-        
-        # Create a temporary directory to save the file
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            file_path = os.path.join(tmpdirname, filename)
-            file.save(file_path)
+    return render_template('videos.html', videos=videos)
 
-            # Upload the file to Firebase Storage
-            blob = bucket.blob(filename)
-            blob.upload_from_filename(file_path)
-            blob.make_public()  # Make the file public, you can control access differently if needed
-            photo_url = blob.public_url
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-        # Log the alert in Firestore
-        alert_data = {
-            'phone_number': phone_number,
-            'message': message,
-            'message_sid': send_motion_alert(phone_number, message),
-            'photo_url': photo_url
-        }
-        db.collection('alerts').add(alert_data)
-
-    return f"Message sent with SID: {alert_data['message_sid']} and photo uploaded to {photo_url}"
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
-def send_motion_alert(phone_number, message):
-    message = client.messages.create(
-        body=message,
-        from_=config.TWILIO_PHONE_NUMBER,  # Your Twilio phone number (must be a validated number on Twilio)
-        to=phone_number
-    )
-    return message.sid
