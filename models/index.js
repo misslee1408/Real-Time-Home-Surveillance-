@@ -17,13 +17,13 @@ fs
   .filter(file => file !== 'index.js' && file.endsWith('.js')) // Exclude index.js itself
   .forEach(file => {
     const modelDefiner = require(path.join(__dirname, file));
-    const model = modelDefiner(sequelize, DataTypes);
+    const model = modelDefiner(sequelize, DataTypes); // Model should be a function that returns the model
     models[model.name] = model;
   });
 
 // Apply associations if needed
 Object.keys(models).forEach(modelName => {
-  if ('associate' in models[modelName]) {
+  if (models[modelName].associate) {
     models[modelName].associate(models);
   }
 });

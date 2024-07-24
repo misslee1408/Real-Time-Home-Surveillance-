@@ -1,5 +1,4 @@
-// creating details of the user #flonicah phiri
-// models/user.js
+// Example model definition: models/user.js
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
@@ -7,23 +6,25 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: true
-    },
-  }, {
-    timestamps: true,
+    }
   });
+
+  // Add associations if any
+  User.associate = (models) => {
+    // Define associations here if needed
+  };
 
   return User;
 };

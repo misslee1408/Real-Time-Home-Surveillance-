@@ -55,17 +55,69 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Additional user controller functions (make sure these are defined)
-const getAllUsers = async (req, res) => { /* ... */ };
-const createUser = async (req, res) => { /* ... */ };
-const getUserbyId = async (req, res) => { /* ... */ };
-const deleteUser = async (req, res) => { /* ... */ };
+// Get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Create a user
+const createUser = async (req, res) => {
+  const { username, email, password, isActive } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      isActive,
+    });
+    res.status(201).json({ message: 'User created successfully', user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Get a user by ID
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Delete a user
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await User.destroy({ where: { id } });
+    if (!result) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 module.exports = {
   registerUser,
   loginUser,
-  getAllUsers,  // Ensure this is defined and exported
-  createUser,   // Ensure this is defined and exported
-  getUserbyId,  // Ensure this is defined and exported
-  deleteUser,   // Ensure this is defined and exported
+  getAllUsers,
+  createUser,
+  getUserById,
+  deleteUser,
 };
