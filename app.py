@@ -24,15 +24,20 @@ def get_pw(username):
 
 def generate_frames():
     camera = cv2.VideoCapture(0)  # Use your camera index if different
-    while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = base64.b64encode(buffer).decode('utf-8')
-            socketio.emit('video_frame', {'frame': frame})
-            socketio.sleep(0.1)  # Adjust the sleep time as needed
+    try:
+        while True:
+            success, frame = camera.read()
+            if not success:
+                break
+            else:
+                ret, buffer = cv2.imencode('.jpg', frame)
+                frame = base64.b64encode(buffer).decode('utf-8')
+                socketio.emit('video_frame', {'frame': frame})
+                socketio.sleep(0.1)  # Adjust the sleep time as needed
+    finally:
+        camera.release()
+        cv2.destroyAllWindows()
+
 
 @upp.route('/')
 @auth.login_required
