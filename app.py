@@ -1,11 +1,15 @@
-from flask import Flask, Response
-from flask_cors import CORS
-import cv2
-from flask_httpauth import HTTPBasicAuth
 
-app = Flask(__name__)
-CORS(app)# Enable CORS for allroutes
+from flask import Flask, render_template
+from flask_cors import CORS
+from flask_httpauth import HTTPBasicAuth
+from flask_socketio import SocketIO, emit
+import cv2
+import base64
+
+upp = Flask(__name__)
+CORS(upp)  # Enable CORS for all routes
 auth = HTTPBasicAuth()
+socketio = SocketIO(upp)
 
 # Replace with your own username and password
 users = {
@@ -26,16 +30,23 @@ def generate_frames():
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            frame = base64.b64encode(buffer).decode('utf-8')
+            socketio.emit('video_frame', {'frame': frame})
+            socketio.sleep(0.1)  # Adjust the sleep time as needed
 
-@app.route('/')
+@upp.route('/')
 @auth.login_required
 def index():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return render_template('index.html')
+
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("Client disconnected")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8555)
- 
-
+    socketio.start_background_task(target=generate_frames)
+    socketio.run(upp, host='0.0.0.0', port=8556)
