@@ -4,7 +4,7 @@ import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
 import 'ProfilePage.dart';
-import 'record.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Center(
                     child: Text(
-                      'WELCOME', // to be made dynamic
+                      'WELCOME TAMANDA!', // to be made dynamic
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => CameraPage()),
+                              MaterialPageRoute(builder: (context) => RecordedPage()),
                             );
                           },
                         ),
