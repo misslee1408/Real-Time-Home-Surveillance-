@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'live_stream_widget.dart';
 import 'api_service.dart';
 
 class LiveStreamScreen extends StatelessWidget {
@@ -12,10 +13,7 @@ class LiveStreamScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Live Stream: ${camera.name}'),
       ),
-      body: Center(
-        child: Text('Live stream for ${camera.name} at ${camera.streamurl}'),
-        // You can use a video player package like `video_player` to stream the video
-      ),
+      body: LiveStreamWidget(streamUrl: camera.streamurl),
     );
   }
 }
