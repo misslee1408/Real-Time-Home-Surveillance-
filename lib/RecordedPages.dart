@@ -141,12 +141,12 @@ class _RecordedPageState extends State<RecordedPage> {
                 children: [
                   CameraFeedWidget(
                     title: 'camera 1',
-                    videoUrl: 'camera url',
+                    videoUrl: 'camera',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'camera 2',
-                    videoUrl: 'camera url',
+                    videoUrl: 'camera',
                   ),
                 ],
               ),

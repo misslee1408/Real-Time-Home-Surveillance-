@@ -1,12 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Add the INTERNET permission here -->
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:label="surveillance_system"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+          <uses-permission android:name="android.permission.CAMERA"/>
+          <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+          <uses-permission android:name="android.permission.INTERNET"/>
+          <uses-permission android:name="android.permission.WAKE_LOCK"/>
+          <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+ 
         <activity
             android:name=".MainActivity"
             android:exported="true"

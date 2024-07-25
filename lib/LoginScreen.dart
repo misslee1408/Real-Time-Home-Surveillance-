@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'create_account_screen.dart';
 // import 'HomeScreen.dart'; // Import the file where HomeScreen is defined
-import 'HomePage.dart'; // Update the path as necessary
 
 import 'user_api_service.dart'; // Import the file where UserApiService is defined
 
