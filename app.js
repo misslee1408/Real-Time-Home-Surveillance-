@@ -68,6 +68,30 @@ const streamRouter = require('./routes/stream');
 app.use('/hls', express.static(hlsDir));
 app.use('/api/streams', streamRouter);
 
+// Example using Express.js
+app.get('/api/footages', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  const footagesDir = path.join(__dirname, 'footages');
+  
+  fs.readdir(footagesDir, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: 'Unable to read footages directory' });
+    }
+    
+    const videos = files.map(file => ({
+      name: file,
+      url: `/footages/${file}` // Adjust the URL path as needed
+    }));
+    
+    res.json(videos);
+  });
+});
+
+// Example using Express.js
+app.use('/footages', express.static(path.join(__dirname, 'footages')));
+
+
 // Test database connection
 sequelize.authenticate()
   .then(() => {

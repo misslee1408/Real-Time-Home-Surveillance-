@@ -5,5 +5,19 @@
     "database": "homeSecurity",
     "host": "localhost",
     "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "liana",
+    "database": "homeSecurity",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "liana",
+    "database": "homeSecurity",
+    "host": "localhost",
+    "dialect": "postgres"
   }
 }

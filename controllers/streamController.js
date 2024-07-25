@@ -3,7 +3,7 @@
 const ffmpeg = require('fluent-ffmpeg');
 
 // Replace with the actual URL of your camera stream
-const cameraStreamUrl = 'http://10.146.27.142:8080/video';
+const cameraStreamUrl = 'http://username:password@41.70.47.48:8556/';
 
 const streamVideo = (req, res) => {
   try {

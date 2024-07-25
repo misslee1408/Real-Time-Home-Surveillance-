@@ -46,11 +46,19 @@ exports.startRecording = (req, res) => {
 };
 
 exports.stopRecording = (req, res) => {
-  if (recordingProcess) {
-     recordingProcess.kill('SIGINT'); // Send SIGINT to stop the recording
-    recordingProcess = null;
-    res.status(200).send({ message: 'Recording stopped', filePath: recordingPath });
-  } else {
-    res.status(400).send({ message: 'No recording in progress' });
-  }
-};
+    if (recordingProcess) {
+      recordingProcess.kill('SIGINT'); // Send SIGINT to stop the recording
+      recordingProcess = null;
+      // Add a delay to ensure the process has stopped before sending a response
+      setTimeout(() => {
+        if (!res.headersSent) {
+          res.status(200).send({ message: 'Recording stopped', filePath: recordingPath });
+        }
+      }, 1000); // Adjust timeout as needed
+    } else {
+      if (!res.headersSent) {
+        res.status(400).send({ message: 'No recording in progress' });
+      }
+    }
+  };
+  
