@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:surveillance_system/api_service.dart';
 import 'SettingsPage.dart';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
 import 'ProfilePage.dart';
 import 'record.dart';
+import 'live_stream_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 1:
-        // Handle home button
+      // Handle home button
         break;
       case 2:
         Navigator.push(
@@ -75,7 +77,28 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         MenuButton(
                           icon: Icons.videocam,
-                          text: 'Live streaming view',
+                          text: 'Live Stream',
+                          onPressed: () {
+                            // Create a Camera object
+                            final camera = Camera(
+                              id: 1, // Provide the id
+                              name: 'Camera 1',
+                              streamurl: 'http://localhost:3000/api/streams/stream', location: '', isActive: true,
+                            );
+
+                            // Navigate to the LiveStreamScreen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LiveStreamScreen(camera: camera),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        MenuButton(
+                          icon: Icons.emergency_recording,
+                          text: 'Record stream',
                           onPressed: () {
                             Navigator.push(
                               context,

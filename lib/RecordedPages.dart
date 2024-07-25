@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'ControlsOverlay.dart';
 
-
 class RecordedPage extends StatefulWidget {
   @override
   _RecordedPageState createState() => _RecordedPageState();
@@ -24,11 +23,9 @@ class _RecordedPageState extends State<RecordedPage> {
     );
 
     if (response.statusCode == 200) {
-      // Recording started successfully
       final responseBody = jsonDecode(response.body);
       print('Recording started: ${responseBody['filePath']}');
     } else {
-      // Failed to start recording
       print('Failed to start recording');
     }
   }
@@ -39,11 +36,9 @@ class _RecordedPageState extends State<RecordedPage> {
     );
 
     if (response.statusCode == 200) {
-      // Recording stopped successfully
       final responseBody = jsonDecode(response.body);
       print('Recording stopped: ${responseBody['filePath']}');
     } else {
-      // Failed to stop recording
       print('Failed to stop recording');
     }
   }
@@ -66,7 +61,6 @@ class _RecordedPageState extends State<RecordedPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Top background image
             Positioned(
               top: 0,
               left: 0,
@@ -81,7 +75,6 @@ class _RecordedPageState extends State<RecordedPage> {
                 ),
               ),
             ),
-            // Bottom background image
             Positioned(
               bottom: 0,
               left: 0,
@@ -96,7 +89,6 @@ class _RecordedPageState extends State<RecordedPage> {
                 ),
               ),
             ),
-            // Back button with Live icon
             Positioned(
               top: 10,
               left: 10,
@@ -132,7 +124,6 @@ class _RecordedPageState extends State<RecordedPage> {
                 ],
               ),
             ),
-            // Camera feeds section
             Positioned(
               top: MediaQuery.of(context).size.height / 15,
               left: 10,
@@ -141,17 +132,16 @@ class _RecordedPageState extends State<RecordedPage> {
                 children: [
                   CameraFeedWidget(
                     title: 'camera 1',
-                    videoUrl: 'camera url',
+                    videoUrl: 'http://10.140.64.19:8080/video',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'camera 2',
-                    videoUrl: 'camera url',
+                    videoUrl: 'camera',
                   ),
                 ],
               ),
             ),
-            // Record button section
             Positioned(
               bottom: MediaQuery.of(context).size.height / 6,
               left: 20,
@@ -179,7 +169,7 @@ class _RecordedPageState extends State<RecordedPage> {
                       Switch(
                         value: isRecording,
                         onChanged: (value) {
-                          _toggleRecording('http://your-camera-url');
+                          _toggleRecording('http://10.140.64.19:8080/video');
                         },
                         activeColor: Colors.black,
                         activeTrackColor: Colors.grey,
@@ -189,7 +179,6 @@ class _RecordedPageState extends State<RecordedPage> {
                 ),
               ),
             ),
-            // Bottom navigation buttons
             Positioned(
               bottom: 20,
               left: 20,
@@ -220,6 +209,91 @@ class _RecordedPageState extends State<RecordedPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CameraFeedWidget extends StatefulWidget {
+  final String title;
+  final String videoUrl;
+
+  const CameraFeedWidget({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  _CameraFeedWidgetState createState() => _CameraFeedWidgetState();
+}
+
+class _CameraFeedWidgetState extends State<CameraFeedWidget> {
+  bool isPlaying = true;
+
+  void _togglePlayPause() {
+    setState(() {
+      isPlaying = !isPlaying;
+    });
+    if (isPlaying) {
+      print('Resuming live stream for ${widget.title}');
+    } else {
+      print('Pausing live stream for ${widget.title}');
+    }
+  }
+
+  void _rewindVideo() {
+    // Implement rewind logic for the live video stream
+    print('Rewinding live stream for ${widget.title}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                isPlaying ? 'Live feed for ${widget.title}' : 'Live stream paused for ${widget.title}',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Icons.replay_10, color: Colors.white),
+                onPressed: _rewindVideo,
+              ),
+              IconButton(
+                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white),
+                onPressed: _togglePlayPause,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

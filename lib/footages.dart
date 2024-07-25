@@ -1,6 +1,41 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class FootagesPage extends StatelessWidget {
+class FootagesPage extends StatefulWidget {
+  @override
+  _FootagesPageState createState() => _FootagesPageState();
+}
+
+class _FootagesPageState extends State<FootagesPage> {
+  List<String> footages = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFootages();
+  }
+
+  Future<void> fetchFootages() async {
+    final response = await http.get(
+      Uri.parse('http://localhost:3000/api/footages'),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        footages = List<String>.from(jsonDecode(response.body));
+        isLoading = false;
+      });
+    } else {
+      // Handle the error
+      setState(() {
+        isLoading = false;
+      });
+      print('Failed to load footages');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,18 +82,21 @@ class FootagesPage extends StatelessWidget {
               left: 20,
               right: 20,
               bottom: 80,
-              child: ListView(
-                children: [
-                  FootageItem(title: 'footage_9_1721029940084'),
-                  FootageItem(title: 'footage_9_1721029940084'),//to be made dynamic
-                  SizedBox(height: 10),
-                  FootageItem(title: 'footage_9_1721028078007'),
-                  SizedBox(height: 10),
-                  FootageItem(title: 'footage_9_1721028560041'),
-                  SizedBox(height: 10),
-                  FootageItem(title: 'footage_9_1721028784593'),
-                ],
-              ),
+              child: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemCount: footages.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            FootageItem(title: footages[index]),
+                            SizedBox(height: 10),
+                          ],
+                        );
+                      },
+                    ),
             ),
             // Bottom navigation buttons
             Positioned(
@@ -111,7 +149,7 @@ class FootageItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.image, color: Colors.black, size: 30),
+          Icon(Icons.video_library, color: Colors.black, size: 30),
           SizedBox(width: 20),
           Expanded(
             child: Text(

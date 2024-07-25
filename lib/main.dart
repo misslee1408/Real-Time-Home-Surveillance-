@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'LoginScreen.dart';
-import 'HomePage.dart'; // Ensure this path is correct
+import 'HomeScreen.dart'; // Ensure this path is correct
 
 void main() {
   runApp(MyApp());
