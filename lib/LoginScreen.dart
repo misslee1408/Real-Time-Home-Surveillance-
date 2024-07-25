@@ -1,9 +1,7 @@
-// pages/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'create_account_screen.dart';
-// import 'HomeScreen.dart'; // Import the file where HomeScreen is defined
-import 'HomePage.dart'; // Update the path as necessary
+import 'HomeScreen.dart'; // Update the path as necessary
 
 import 'user_api_service.dart'; // Import the file where UserApiService is defined
 
@@ -28,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await _userApiService.loginUser(email, password);
+      print('Response: $response'); // Debug print to see the actual response
       if (response.containsKey('token')) {
         // Save user session
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,11 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         // Navigate to the home screen
-      Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => HomePage()),
-);
-
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       } 
       else {
         ScaffoldMessenger.of(context).showSnackBar(
