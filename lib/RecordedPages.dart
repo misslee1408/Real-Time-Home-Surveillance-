@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 import 'ControlsOverlay.dart';
 
 class RecordedPage extends StatefulWidget {
@@ -7,23 +10,47 @@ class RecordedPage extends StatefulWidget {
 }
 
 class _RecordedPageState extends State<RecordedPage> {
-  bool _isLive = false;
-  bool _isRecording = false;
+  bool isRecording = false;
 
-  void _handleLive() {
-    setState(() {
-      _isLive = true;
-    });
+  Future<void> startRecording(String cameraUrl) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/recording/start-recording'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'cameraUrl': cameraUrl,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      print('Recording started: ${responseBody['filePath']}');
+    } else {
+      print('Failed to start recording');
+    }
   }
 
-  void _handleRecording(bool value) {
+  Future<void> stopRecording() async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/recording/stop-recording'),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      print('Recording stopped: ${responseBody['filePath']}');
+    } else {
+      print('Failed to stop recording');
+    }
+  }
+
+  void _toggleRecording(String cameraUrl) {
     setState(() {
-      _isRecording = value;
-      // Add logic to start or stop recording
-      if (value) {
-        print('Recording started');
+      isRecording = !isRecording;
+      if (isRecording) {
+        startRecording(cameraUrl);
       } else {
-        print('Recording stopped');
+        stopRecording();
       }
     });
   }
@@ -57,7 +84,7 @@ class _RecordedPageState extends State<RecordedPage> {
                 height: MediaQuery.of(context).size.height / 2.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/background.jpeg'),
+                    image: AssetImage(''),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -105,9 +132,13 @@ class _RecordedPageState extends State<RecordedPage> {
               child: Column(
                 children: [
                   CameraFeedWidget(
-                    title: 'Front Door',
-                    videoUrl: 'http://41.70.47.48:8555/',
-                    onPlay: _handleLive,
+                    title: 'camera 1',
+                    videoUrl: 'http://10.176.26.108:8080/video',
+                  ),
+                  SizedBox(height: 10),
+                  CameraFeedWidget(
+                    title: 'camera 2',
+                    videoUrl: 'http://10.176.26.108:8080/video',
                   ),
                   // Uncomment if you have another camera feed
                   // CameraFeedWidget(
@@ -143,8 +174,10 @@ class _RecordedPageState extends State<RecordedPage> {
                       ),
                       SizedBox(width: 100),
                       Switch(
-                        value: _isRecording,
-                        onChanged: _handleRecording,
+                        value: isRecording,
+                        onChanged: (value) {
+                          _toggleRecording('http://10.176.26.108:8080/video');
+                        },
                         activeColor: Colors.black,
                         activeTrackColor: Colors.grey,
                       ),
@@ -183,6 +216,104 @@ class _RecordedPageState extends State<RecordedPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CameraFeedWidget extends StatefulWidget {
+  final String title;
+  final String videoUrl;
+
+  const CameraFeedWidget({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  _CameraFeedWidgetState createState() => _CameraFeedWidgetState();
+}
+
+class _CameraFeedWidgetState extends State<CameraFeedWidget> {
+  late VideoPlayerController _controller;
+  bool isPlaying = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      isPlaying = !isPlaying;
+      isPlaying ? _controller.play() : _controller.pause();
+    });
+  }
+
+  void _rewindVideo() {
+    // Implement rewind logic for the live video stream
+    print('Rewinding live stream for ${widget.title}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : CircularProgressIndicator(),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Icons.replay_10, color: Colors.white),
+                onPressed: _rewindVideo,
+              ),
+              IconButton(
+                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white),
+                onPressed: _togglePlayPause,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

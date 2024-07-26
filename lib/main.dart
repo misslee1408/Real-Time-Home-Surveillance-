@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'HomeScreen.dart';
 import 'LoginScreen.dart';
-import 'backcamera.dart';
+import 'HomeScreen.dart'; // Ensure this path is correct
 
 void main() {
   runApp(MyApp());
@@ -16,6 +15,7 @@ class _MyAppState extends State<MyApp> {
   bool isDarkMode = false;
 
   void _toggleTheme() {
+    
     setState(() {
       isDarkMode = !isDarkMode;
     });
@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false, // Remove the debug banner
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
       home: LoginScreen(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
+      // home: HomePage(),
     );
   }
 }

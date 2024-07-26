@@ -5,21 +5,29 @@ class ApiService {
   static const String baseUrl = 'http://localhost:3000/api/cameras/';
 
   Future<void> addCamera(String name, String location, String streamurl, bool isActive) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/add'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'name': name,
-        'location': location,
-        'streamurl': streamurl,
-        'isActive': isActive,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/add'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': name,
+          'location': location,
+          'streamurl': streamurl,
+          'isActive': isActive,
+        }),
+      );
 
-    if (response.statusCode != 201) {
-      throw Exception('Failed to add camera');
+      if (response.statusCode == 201) {
+        print('Camera added successfully.');
+      } else {
+        print('Failed to add camera: ${response.body}');
+        throw Exception('Failed to add camera: ${response.body}');
+      }
+    } catch (error) {
+      print('Error adding camera: $error');
+      throw Exception('Failed to add camera: $error');
     }
   }
 
@@ -32,11 +40,11 @@ class ApiService {
         return jsonResponse.map((camera) => Camera.fromJson(camera)).toList();
       } else {
         print('Failed to load cameras: ${response.body}');
-        throw Exception('Failed to load cameras');
+        throw Exception('Failed to load cameras: ${response.body}');
       }
     } catch (error) {
       print('Error fetching cameras: $error');
-      throw Exception('Failed to load cameras');
+      throw Exception('Failed to load cameras: $error');
     }
   }
 }
