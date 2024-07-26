@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:surveillance_system/SettingsPage';
+import 'package:surveillance_system/record.dart';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'footages.dart';
-import 'ProfilePage.dart';
-import 'record.dart';
+import 'ProfilePage.dart'; // Import ProfilePage
+import 'SettingsPage.dart'; // Import SettingsPage
 
 class HomePage extends StatefulWidget {
   @override
+
   _HomePageState createState() => _HomePageState();
 }
 
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Center(
                     child: Text(
-                      'WELCOME', // to be made dynamic
+                      'WELCOME!', // to be made dynamic
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => CameraPage()),
+                              MaterialPageRoute(builder: (context) =>CameraPage()),
                             );
                           },
                         ),

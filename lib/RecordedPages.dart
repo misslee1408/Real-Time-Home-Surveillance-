@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
-
 import 'ControlsOverlay.dart';
-class RecordedPage extends StatelessWidget {
+
+class RecordedPage extends StatefulWidget {
+  @override
+  _RecordedPageState createState() => _RecordedPageState();
+}
+
+class _RecordedPageState extends State<RecordedPage> {
+  bool _isLive = false;
+  bool _isRecording = false;
+
+  void _handleLive() {
+    setState(() {
+      _isLive = true;
+    });
+  }
+
+  void _handleRecording(bool value) {
+    setState(() {
+      _isRecording = value;
+      // Add logic to start or stop recording
+      if (value) {
+        print('Recording started');
+      } else {
+        print('Recording stopped');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,13 +35,12 @@ class RecordedPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // Top background image
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: Container(
-                height: MediaQuery.of(context).size.height / 2.5,
+                height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/topback.jpg'),
@@ -24,7 +49,6 @@ class RecordedPage extends StatelessWidget {
                 ),
               ),
             ),
-            // Bottom background image
             Positioned(
               bottom: 0,
               left: 0,
@@ -39,7 +63,6 @@ class RecordedPage extends StatelessWidget {
                 ),
               ),
             ),
-            // Back button with Live icon
             Positioned(
               top: 10,
               left: 10,
@@ -54,7 +77,7 @@ class RecordedPage extends StatelessWidget {
                   SizedBox(width: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: _isLive ? Colors.green : Colors.grey,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -75,7 +98,6 @@ class RecordedPage extends StatelessWidget {
                 ],
               ),
             ),
-            // Camera feeds section
             Positioned(
               top: MediaQuery.of(context).size.height / 15,
               left: 10,
@@ -84,17 +106,18 @@ class RecordedPage extends StatelessWidget {
                 children: [
                   CameraFeedWidget(
                     title: 'Front Door',
-                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+                    videoUrl: 'http://41.70.47.48:8555/',
+                    onPlay: _handleLive,
                   ),
-                  SizedBox(height: 10),
-                  CameraFeedWidget(
-                    title: 'Back Door',
-                    videoUrl: 'https://www.w3schools.com/html/movie.mp4',
-                  ),
+                  // Uncomment if you have another camera feed
+                  // CameraFeedWidget(
+                  //   title: 'Back Door',
+                  //   videoUrl: 'http://41.70.47.48:8555/',
+                  //   onPlay: _handleLive,
+                  // ),
                 ],
               ),
             ),
-            // Record button section
             Positioned(
               bottom: MediaQuery.of(context).size.height / 6,
               left: 20,
@@ -120,10 +143,8 @@ class RecordedPage extends StatelessWidget {
                       ),
                       SizedBox(width: 100),
                       Switch(
-                        value: true, // Change this to a variable to handle state
-                        onChanged: (value) {
-                          // Handle switch toggle
-                        },
+                        value: _isRecording,
+                        onChanged: _handleRecording,
                         activeColor: Colors.black,
                         activeTrackColor: Colors.grey,
                       ),
@@ -132,7 +153,6 @@ class RecordedPage extends StatelessWidget {
                 ),
               ),
             ),
-            // Bottom navigation buttons
             Positioned(
               bottom: 20,
               left: 20,
@@ -149,7 +169,7 @@ class RecordedPage extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.home, color: Colors.white),
                     onPressed: () {
-                      Navigator.pop(context); // Go back to the previous screen
+                      Navigator.pop(context);
                     },
                   ),
                   IconButton(
@@ -167,4 +187,3 @@ class RecordedPage extends StatelessWidget {
     );
   }
 }
-
