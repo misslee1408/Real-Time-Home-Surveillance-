@@ -8,6 +8,10 @@ if (!fs.existsSync(footagesDir)) {
   fs.mkdirSync(footagesDir);
 }
 
+// Global variable to keep track of the current recording process
+let recordingProcess = null;
+let recordingPath = '';
+
 exports.startRecording = (req, res) => {
   const cameraUrl = req.body.cameraUrl;
 
@@ -16,31 +20,45 @@ exports.startRecording = (req, res) => {
   }
 
   const outputFileName = `recording-${new Date().toISOString().replace(/:/g, '-')}.mp4`;
-  const outputPath = path.join(footagesDir, outputFileName);
+  recordingPath = path.join(footagesDir, outputFileName);
 
-  ffmpeg(cameraUrl)
-    .output(outputPath)
+  // Start the ffmpeg recording process
+  recordingProcess = ffmpeg(cameraUrl)
+    .output(recordingPath)
     .on('start', () => {
-      console.log(`Started recording to ${outputPath}`);
+      console.log(`Started recording to ${recordingPath}`);
     })
     .on('end', () => {
-      console.log(`Recording finished: ${outputPath}`);
-      res.status(200).send(`Recording saved to ${outputPath}`);
+      console.log(`Recording finished: ${recordingPath}`);
+      // Optionally, reset the recording process and path
+      recordingProcess = null;
+      recordingPath = '';
     })
     .on('error', (err) => {
       console.error(`Recording error: ${err.message}`);
+      recordingProcess = null;
+      recordingPath = '';
       res.status(500).send(`Recording error: ${err.message}`);
     })
     .run();
-};
 
+  res.status(200).send(`Recording started and saving to ${recordingPath}`);
+};
 
 exports.stopRecording = (req, res) => {
-  if (recordingProcess) {
-    recordingProcess.kill('SIGINT');
-    recordingProcess = null;
-    res.status(200).send({ message: 'Recording stopped', filePath: recordingPath });
-  } else {
-    res.status(400).send({ message: 'No recording in progress' });
-  }
-};
+    if (recordingProcess) {
+      recordingProcess.kill('SIGINT'); // Send SIGINT to stop the recording
+      recordingProcess = null;
+      // Add a delay to ensure the process has stopped before sending a response
+      setTimeout(() => {
+        if (!res.headersSent) {
+          res.status(200).send({ message: 'Recording stopped', filePath: recordingPath });
+        }
+      }, 1000); // Adjust timeout as needed
+    } else {
+      if (!res.headersSent) {
+        res.status(400).send({ message: 'No recording in progress' });
+      }
+    }
+  };
+  
