@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON and urlencoded data
 app.use(cors({
-  origin: 'http://localhost:5981/', // Replace with your frontend URL
+  origin: 'http://localhost:13638/', // Replace with your frontend URL
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 }));
