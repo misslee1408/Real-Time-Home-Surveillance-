@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 
 class FootagesPage extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class FootagesPage extends StatefulWidget {
 }
 
 class _FootagesPageState extends State<FootagesPage> {
-  List<String> footages = [];
+  List<Map<String, String>> footages = [];
   bool isLoading = true;
 
   @override
@@ -18,23 +19,28 @@ class _FootagesPageState extends State<FootagesPage> {
   }
 
   Future<void> fetchFootages() async {
-    final response = await http.get(
-      Uri.parse('http://localhost:3000/api/footages'),
-    );
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/footages/'),
+  );
 
-    if (response.statusCode == 200) {
-      setState(() {
-        footages = List<String>.from(jsonDecode(response.body));
-        isLoading = false;
-      });
-    } else {
-      // Handle the error
-      setState(() {
-        isLoading = false;
-      });
-      print('Failed to load footages');
-    }
+  if (response.statusCode == 200) {
+    setState(() {
+      footages = List<Map<String, String>>.from(
+        jsonDecode(response.body).map((item) => {
+          'name': item['name'],
+          'url': item['url']
+        }),
+      );
+      isLoading = false;
+    });
+  } else {
+    // Handle the error
+    setState(() {
+      isLoading = false;
+    });
+    print('Failed to load footages');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +95,13 @@ class _FootagesPageState extends State<FootagesPage> {
                   : ListView.builder(
                       itemCount: footages.length,
                       itemBuilder: (context, index) {
+                        final footage = footages[index];
                         return Column(
                           children: [
-                            FootageItem(title: footages[index]),
+                            FootageItem(
+                              title: footage['name']!,
+                              url: footage['url']!,
+                            ),
                             SizedBox(height: 10),
                           ],
                         );
@@ -136,8 +146,9 @@ class _FootagesPageState extends State<FootagesPage> {
 
 class FootageItem extends StatelessWidget {
   final String title;
+  final String url;
 
-  FootageItem({required this.title});
+  FootageItem({required this.title, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -152,17 +163,84 @@ class FootageItem extends StatelessWidget {
           Icon(Icons.video_library, color: Colors.black, size: 30),
           SizedBox(width: 20),
           Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VideoPlayerScreen(url: url),
+                  ),
+                );
+              },
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class VideoPlayerScreen extends StatefulWidget {
+  final String url;
+
+  VideoPlayerScreen({required this.url});
+
+  @override
+  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+}
+
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.url)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Video Player')),
+      body: Center(
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : CircularProgressIndicator(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            if (_controller.value.isPlaying) {
+              _controller.pause();
+            } else {
+              _controller.play();
+            }
+          });
+        },
+        child: Icon(
+          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }

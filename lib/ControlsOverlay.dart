@@ -8,7 +8,7 @@ class CameraFeedWidget extends StatefulWidget {
   const CameraFeedWidget({
     Key? key,
     required this.title,
-    required this.videoUrl,
+    required this.videoUrl, required void Function(String cameraUrl) toggleRecording,
   }) : super(key: key);
 
   @override

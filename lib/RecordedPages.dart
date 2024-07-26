@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 import 'ControlsOverlay.dart';
 
 class RecordedPage extends StatefulWidget {
@@ -132,12 +133,12 @@ class _RecordedPageState extends State<RecordedPage> {
                 children: [
                   CameraFeedWidget(
                     title: 'camera 1',
-                    videoUrl: 'http://10.140.64.19:8080/video',
+                    videoUrl: 'http://10.176.26.108:8080/video',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'camera 2',
-                    videoUrl: 'camera',
+                    videoUrl: 'http://10.176.26.108:8080/video',
                   ),
                 ],
               ),
@@ -169,7 +170,7 @@ class _RecordedPageState extends State<RecordedPage> {
                       Switch(
                         value: isRecording,
                         onChanged: (value) {
-                          _toggleRecording('http://10.140.64.19:8080/video');
+                          _toggleRecording('http://10.176.26.108:8080/video');
                         },
                         activeColor: Colors.black,
                         activeTrackColor: Colors.grey,
@@ -229,17 +230,30 @@ class CameraFeedWidget extends StatefulWidget {
 }
 
 class _CameraFeedWidgetState extends State<CameraFeedWidget> {
+  late VideoPlayerController _controller;
   bool isPlaying = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _togglePlayPause() {
     setState(() {
       isPlaying = !isPlaying;
+      isPlaying ? _controller.play() : _controller.pause();
     });
-    if (isPlaying) {
-      print('Resuming live stream for ${widget.title}');
-    } else {
-      print('Pausing live stream for ${widget.title}');
-    }
   }
 
   void _rewindVideo() {
@@ -272,12 +286,12 @@ class _CameraFeedWidgetState extends State<CameraFeedWidget> {
           ),
           Expanded(
             child: Center(
-              child: Text(
-                isPlaying ? 'Live feed for ${widget.title}' : 'Live stream paused for ${widget.title}',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              child: _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : CircularProgressIndicator(),
             ),
           ),
           Row(

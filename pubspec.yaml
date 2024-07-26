@@ -48,6 +48,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.4
   intl: ^0.19.0
+  webview_flutter: ^4.8.0
 
   
 dev_dependencies:
@@ -76,7 +77,7 @@ flutter:
   assets:
     - assets/locked_house.jpg
     - assets/background.jpeg
-
+    # - assets/video.html
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

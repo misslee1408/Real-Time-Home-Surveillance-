@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LiveStreamWidget extends StatefulWidget {
   final String streamUrl;
@@ -13,15 +14,21 @@ class LiveStreamWidget extends StatefulWidget {
 
 class _LiveStreamWidgetState extends State<LiveStreamWidget> {
   late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
-  bool _isFullScreen = false;
+  bool _isPlaying = true;
+  bool _isRecording = false;
+
+  final String username = 'admin';
+  final String password = 'password';
+  final String backendUrl = 'http://localhost:3000/api/recording'; // Replace with your backend IP address
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.streamUrl);
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
+    _controller = VideoPlayerController.network(widget.streamUrl)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
   }
 
   @override
@@ -30,65 +37,139 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder<void>(
-        future: _initializeVideoPlayerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Stack(
-              children: [
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
-                _buildControlsOverlay(),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      ),
-    );
+  void _togglePlayPause() {
+    setState(() {
+      if (_isPlaying) {
+        _controller.pause();
+      } else {
+        _controller.play();
+      }
+      _isPlaying = !_isPlaying;
+    });
   }
 
-  Widget _buildControlsOverlay() {
-    return Positioned.fill(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: Icon(Icons.replay_10),
-                onPressed: () {
-                  final currentPosition = _controller.value.position;
-                  final rewindPosition = Duration(seconds: currentPosition.inSeconds - 10);
-                  _controller.seekTo(rewindPosition);
-                },
+  void _rewind() {
+    final position = _controller.value.position;
+    final rewindPosition = position - Duration(seconds: 10);
+    _controller.seekTo(rewindPosition);
+  }
+
+  void _forward() {
+    final position = _controller.value.position;
+    final forwardPosition = position + Duration(seconds: 10);
+    _controller.seekTo(forwardPosition);
+  }
+
+  void _toggleRecording() async {
+    setState(() {
+      _isRecording = !_isRecording;
+    });
+
+    if (_isRecording) {
+      await _startRecording();
+    } else {
+      await _stopRecording();
+    }
+  }
+
+  Future<void> _startRecording() async {
+    final url = '$backendUrl/start-recording';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
+        },
+        body: {
+          'streamUrl': widget.streamUrl,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Recording started successfully.');
+      } else {
+        print('Failed to start recording: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error starting recording: $e');
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    final url = '$backendUrl/stop-recording';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
+        },
+        body: {
+          'streamUrl': widget.streamUrl,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Recording stopped successfully.');
+      } else {
+        print('Failed to stop recording: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error stopping recording: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Center(
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
+              : CircularProgressIndicator(),
+        ),
+        if (_controller.value.isInitialized)
+          Positioned(
+            bottom: 20.0,
+            left: 0.0,
+            right: 0.0,
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.replay_10, size: 30.0, color: Colors.white),
+                    onPressed: _rewind,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      _isPlaying ? Icons.pause : Icons.play_arrow,
+                      size: 30.0,
+                      color: Colors.white,
+                    ),
+                    onPressed: _togglePlayPause,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.forward_10, size: 30.0, color: Colors.white),
+                    onPressed: _forward,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      _isRecording ? Icons.circle : Icons.circle_outlined,
+                      size: 30.0,
+                      color: _isRecording ? Colors.red : Colors.white,
+                    ),
+                    onPressed: _toggleRecording,
+                  ),
+                ],
               ),
-              IconButton(
-                icon: Icon(_isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen),
-                onPressed: () {
-                  setState(() {
-                    _isFullScreen = !_isFullScreen;
-                    if (_isFullScreen) {
-                      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-                    } else {
-                      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-                    }
-                  });
-                },
-              ),
-            ],
+            ),
           ),
-        ],
-      ),
+      ],
     );
   }
 }
