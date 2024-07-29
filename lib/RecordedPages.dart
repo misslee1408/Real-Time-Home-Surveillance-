@@ -104,7 +104,7 @@ class _RecordedPageState extends State<RecordedPage> {
                   SizedBox(width: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: _isLive ? Colors.green : Colors.grey,
+                      color: isRecording ? Colors.red : Colors.grey, // Adjusted color based on recording state
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -113,7 +113,7 @@ class _RecordedPageState extends State<RecordedPage> {
                         Icon(Icons.circle, color: Colors.white, size: 10),
                         SizedBox(width: 5),
                         Text(
-                          'Live',
+                          isRecording ? 'Recording' : 'Live', // Adjusted text based on recording state
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

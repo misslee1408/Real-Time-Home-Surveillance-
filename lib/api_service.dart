@@ -70,7 +70,7 @@ class Camera {
       name: json['name'],
       location: json['location'],
       streamurl: json['streamurl'],
-      isActive: json['isActive'],
+      isActive: json['isActive'] ?? true, // Handle null value
     );
   }
 }

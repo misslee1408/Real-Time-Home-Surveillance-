@@ -1085,8 +1085,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
-<<<<<<< HEAD
-=======
   web_socket_channel:
     dependency: transitive
     description:
@@ -1103,62 +1101,50 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
->>>>>>> 184158b4d3854c9fbd5eaa944d8fd96c2b0fce6e
   webview_flutter:
     dependency: "direct main"
     description:
       name: webview_flutter
-<<<<<<< HEAD
       sha256: "392c1d83b70fe2495de3ea2c84531268d5b8de2de3f01086a53334d8b6030a88"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.4"
-=======
       sha256: "6869c8786d179f929144b4a1f86e09ac0eddfe475984951ea6c634774c16b522"
       url: "https://pub.dev"
     source: hosted
     version: "4.8.0"
->>>>>>> 184158b4d3854c9fbd5eaa944d8fd96c2b0fce6e
   webview_flutter_android:
     dependency: transitive
     description:
       name: webview_flutter_android
-<<<<<<< HEAD
       sha256: "8b3b2450e98876c70bfcead876d9390573b34b9418c19e28168b74f6cb252dbd"
       url: "https://pub.dev"
     source: hosted
     version: "2.10.4"
-=======
       sha256: f42447ca49523f11d8f70abea55ea211b3cafe172dd7a0e7ac007bb35dd356dc
       url: "https://pub.dev"
     source: hosted
     version: "3.16.4"
->>>>>>> 184158b4d3854c9fbd5eaa944d8fd96c2b0fce6e
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
-<<<<<<< HEAD
       sha256: "812165e4e34ca677bdfbfa58c01e33b27fd03ab5fa75b70832d4b7d4ca1fa8cf"
       url: "https://pub.dev"
     source: hosted
     version: "1.9.5"
-=======
       sha256: d937581d6e558908d7ae3dc1989c4f87b786891ab47bb9df7de548a151779d8d
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
->>>>>>> 184158b4d3854c9fbd5eaa944d8fd96c2b0fce6e
   webview_flutter_wkwebview:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
-<<<<<<< HEAD
       sha256: a5364369c758892aa487cbf59ea41d9edd10f9d9baf06a94e80f1bd1b4c7bbc0
       url: "https://pub.dev"
     source: hosted
     version: "2.9.5"
-=======
       sha256: "9c62cc46fa4f2d41e10ab81014c1de470a6c6f26051a2de32111b2ee55287feb"
       url: "https://pub.dev"
     source: hosted
@@ -1187,7 +1173,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.4+2"
->>>>>>> 184158b4d3854c9fbd5eaa944d8fd96c2b0fce6e
   xdg_directories:
     dependency: transitive
     description:

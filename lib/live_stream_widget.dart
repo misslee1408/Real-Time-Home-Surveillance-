@@ -80,51 +80,54 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget> {
     }
   }
 
-  Future<void> _startRecording() async {
-    final url = '$backendUrl/start-recording';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
-        },
-        body: {
-          'streamUrl': widget.streamUrl,
-        },
-      );
 
-      if (response.statusCode == 200) {
-        print('Recording started successfully.');
-      } else {
-        print('Failed to start recording: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print('Error starting recording: $e');
+Future<void> _startRecording() async {
+  final url = '$backendUrl/start-recording';
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
+      },
+      body: jsonEncode({
+        'streamUrl': widget.streamUrl,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Recording started successfully.');
+    } else {
+      print('Failed to start recording: ${response.statusCode} ${response.reasonPhrase}');
     }
+  } catch (e) {
+    print('Error starting recording: $e');
   }
+}
 
-  Future<void> _stopRecording() async {
-    final url = '$backendUrl/stop-recording';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
-        },
-        body: {
-          'streamUrl': widget.streamUrl,
-        },
-      );
+Future<void> _stopRecording() async {
+  final url = '$backendUrl/stop-recording';
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
+      },
+      body: jsonEncode({
+        'streamUrl': widget.streamUrl,
+      }),
+    );
 
-      if (response.statusCode == 200) {
-        print('Recording stopped successfully.');
-      } else {
-        print('Failed to stop recording: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print('Error stopping recording: $e');
+    if (response.statusCode == 200) {
+      print('Recording stopped successfully.');
+    } else {
+      print('Failed to stop recording: ${response.statusCode} ${response.reasonPhrase}');
     }
+  } catch (e) {
+    print('Error stopping recording: $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {
