@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Remove the debug banner
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: LoginScreen(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
+      home: HomePage(), //HomeScreen(toggleTheme: _toggleTheme, isDarkMode: isDarkMode),
       // home: HomePage(),
     );
   }

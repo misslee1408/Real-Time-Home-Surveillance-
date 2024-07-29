@@ -3,8 +3,8 @@ import 'package:surveillance_system/api_service.dart';
 import 'SettingsPage.dart';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
-import 'footages.dart';
 import 'ProfilePage.dart';
+import 'footages_list.dart';
 import 'record.dart';
 import 'live_stream_screen.dart';
 

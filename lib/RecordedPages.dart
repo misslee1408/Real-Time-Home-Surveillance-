@@ -133,12 +133,12 @@ class _RecordedPageState extends State<RecordedPage> {
                 children: [
                   CameraFeedWidget(
                     title: 'camera 1',
-                    videoUrl: 'http://10.176.26.108:8080/video',
+                    videoUrl: 'http://41.70.47.48:8555/',
                   ),
                   SizedBox(height: 10),
                   CameraFeedWidget(
                     title: 'camera 2',
-                    videoUrl: 'http://10.176.26.108:8080/video',
+                    videoUrl: 'http://41.70.47.48:8555/',
                   ),
                 ],
               ),
