@@ -1,18 +1,23 @@
-// controllers/streamController.js
-
 const ffmpeg = require('fluent-ffmpeg');
 
 // Replace with the actual URL of your camera stream
-const cameraStreamUrl = 'http://username:password@41.70.47.48:8556/';
+const cameraStreamUrl = 'rtsp://41.70.47.48:8554/mystream';
 
 const streamVideo = (req, res) => {
   try {
-    res.contentType('video/webm');
-
     const ffmpegCommand = ffmpeg(cameraStreamUrl)
-      .format('webm')
-      .videoCodec('libvpx')
-      .audioCodec('libopus')
+      .inputOptions([
+        '-rtsp_transport', 'tcp',        // Use TCP for RTSP transport
+        '-analyzeduration', '1000000',   // Increase analyzeduration
+        '-probesize', '5000000'          // Increase probesize
+      ])
+      .outputOptions([
+        '-preset', 'ultrafast',          // Use ultrafast preset for minimal latency
+        '-crf', '18'                     // Constant Rate Factor (lower is better quality)
+      ])
+      .format('webm')                    // Use webm for streaming
+      .videoCodec('libvpx')              // Use libvpx for video codec
+      .audioCodec('libvorbis')           // Use libvorbis for audio codec
       .on('start', () => {
         console.log('Stream started');
       })
@@ -29,6 +34,7 @@ const streamVideo = (req, res) => {
         console.error('FFmpeg stderr:', stderrLine);
       });
 
+    res.contentType('video/webm');
     ffmpegCommand.pipe(res, { end: true });
 
   } catch (error) {
