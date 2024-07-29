@@ -8,8 +8,10 @@ import 'ProfilePage.dart';
 import 'record.dart';
 import 'live_stream_screen.dart';
 
+
 class HomePage extends StatefulWidget {
   @override
+
   _HomePageState createState() => _HomePageState();
 }
 
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Center(
                     child: Text(
-                      'WELCOME', // to be made dynamic
+                      'WELCOME!', // to be made dynamic
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => CameraPage()),
+                              MaterialPageRoute(builder: (context) =>CameraPage()),
                             );
                           },
                         ),

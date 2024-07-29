@@ -14,7 +14,7 @@ class _LiveVideoStreamingWidgetState extends State<LiveVideoStreamingWidget> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network('http://<raspberry-pi-ip>:<port>/video_feed')
+    _controller = VideoPlayerController.network('https://41.70.47.48:8555/')
       ..initialize().then((_) {
         setState(() {
           _isPlaying = false;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'LoginScreen.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -79,7 +80,10 @@ class SettingsPage extends StatelessWidget {
                             icon: Icons.logout,
                             text: 'Logout',
                             onTap: () {
-                              // Logout logic
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => LoginScreen()),
+                              );
                             },
                           ),
                         ],

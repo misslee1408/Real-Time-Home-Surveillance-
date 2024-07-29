@@ -67,7 +67,7 @@ class _RecordedPageState extends State<RecordedPage> {
               left: 0,
               right: 0,
               child: Container(
-                height: MediaQuery.of(context).size.height / 2.5,
+                height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/topback.jpg'),
@@ -104,7 +104,7 @@ class _RecordedPageState extends State<RecordedPage> {
                   SizedBox(width: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: _isLive ? Colors.green : Colors.grey,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -140,6 +140,12 @@ class _RecordedPageState extends State<RecordedPage> {
                     title: 'camera 2',
                     videoUrl: 'http://10.176.26.108:8080/video',
                   ),
+                  // Uncomment if you have another camera feed
+                  // CameraFeedWidget(
+                  //   title: 'Back Door',
+                  //   videoUrl: 'http://41.70.47.48:8555/',
+                  //   onPlay: _handleLive,
+                  // ),
                 ],
               ),
             ),
@@ -196,7 +202,7 @@ class _RecordedPageState extends State<RecordedPage> {
                   IconButton(
                     icon: Icon(Icons.home, color: Colors.white),
                     onPressed: () {
-                      Navigator.pop(context); // Go back to the previous screen
+                      Navigator.pop(context);
                     },
                   ),
                   IconButton(
