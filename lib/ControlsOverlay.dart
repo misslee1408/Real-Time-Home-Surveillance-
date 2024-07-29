@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 class CameraFeedWidget extends StatefulWidget {
   final String title;
   final String videoUrl;
+  final Function onPlay;
 
   const CameraFeedWidget({
     Key? key,
