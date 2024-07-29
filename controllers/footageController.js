@@ -39,3 +39,17 @@ exports.getFootage = (req, res) => {
     }
   });
 };
+
+exports.listFootages = (req, res) => {
+  const footagesDir = path.join(__dirname, '..', 'footages');
+
+  fs.readdir(footagesDir, (err, files) => {
+    if (err) {
+      return res.status(500).send('Unable to scan directory');
+    }
+
+    // Filter out non-video files if needed
+    const videoFiles = files.filter(file => file.endsWith('.mp4'));
+    res.json(videoFiles);
+  });
+};
