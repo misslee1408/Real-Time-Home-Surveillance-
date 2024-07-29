@@ -47,6 +47,28 @@ class ApiService {
       throw Exception('Failed to load cameras: $error');
     }
   }
+
+
+ Future<void> deleteCamera(int id) async {
+  try {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Camera deleted successfully.');
+    } else {
+      print('Failed to delete camera: ${response.body}');
+      throw Exception('Failed to delete camera: ${response.body}');
+    }
+  } catch (error) {
+    print('Error deleting camera: $error');
+    throw Exception('Failed to delete camera: $error');
+  }
+}
 }
 
 class Camera {

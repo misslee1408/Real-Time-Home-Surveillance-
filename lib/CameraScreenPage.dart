@@ -23,6 +23,17 @@ class _CameraPageState extends State<CameraPage> {
     });
   }
 
+  Future<void> _deleteCamera(int id) async {
+    try {
+      await ApiService().deleteCamera(id);
+      // Refresh the cameras list after deletion
+      _refreshCameras();
+    } catch (e) {
+      // Handle error
+      print('Error deleting camera: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +49,22 @@ class _CameraPageState extends State<CameraPage> {
                 return ListTile(
                   title: Text(camera.name),
                   subtitle: Text(camera.location),
-                  trailing: Switch(
-                    value: camera.isActive,
-                    onChanged: (value) {
-                      // Handle switch toggle if needed
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Switch(
+                        value: camera.isActive,
+                        onChanged: (value) {
+                          // Handle switch toggle if needed
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          _showDeleteConfirmation(context, camera.id);
+                        },
+                      ),
+                    ],
                   ),
                   onTap: () {
                     Navigator.push(
@@ -74,6 +96,33 @@ class _CameraPageState extends State<CameraPage> {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, int cameraId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Camera'),
+          content: Text('Are you sure you want to delete this camera?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _deleteCamera(cameraId);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:surveillance_system/CameraScreenPage.dart';
 import 'package:surveillance_system/api_service.dart';
 import 'SettingsPage.dart';
 import 'CameraControlWidget.dart';
 import 'RecordedPages.dart';
 import 'ProfilePage.dart';
 import 'footages_list.dart';
-import 'record.dart';
 import 'live_stream_screen.dart';
 
 
