@@ -81,12 +81,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('* Minimum of 8 characters'),
-                  Text('* Maximum of 20 characters (optional, based on preference)'),
-                  Text('* Must include at least one uppercase letter (A-Z)'),
-                  Text('* Must include at least one lowercase letter (a-z)'),
-                  Text('* Must include at least one digit (0-9)'),
-                  Text('* Must include at least one special character (e.g., !, @, #, %, ^, &, *)'),
+                  Text('Do not share your password with anyone.')
                 ],
               ),
               SizedBox(height: 20),
@@ -102,7 +97,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                'By signing up, you agree to our Terms and Conditions\nRead our Privacy Policy',
+                'By signing up, you are ready to go enjoy.',
                 textAlign: TextAlign.center,
               ),
             ],
