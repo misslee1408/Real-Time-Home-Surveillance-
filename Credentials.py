@@ -1,3 +1,5 @@
+import threading
+import time
 import cv2
 from flask import Flask, render_template, request, send_from_directory, jsonify, Response
 from twilio.rest import Client
@@ -56,8 +58,6 @@ def generate_frames():
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-if __name__ == '__main__':
-    app.run(debug=True)
 def save_and_upload_video():
     cap = cv2.VideoCapture('http://41.70.47.48:8556/')  
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -100,3 +100,13 @@ def start_capture():
     # Trigger video capture and upload
     save_and_upload_video()
     return "Capture started", 200
+
+def scheduled_capture(interval=60):
+    while True:
+        save_and_upload_video()
+        time.sleep(interval)
+
+if __name__ == '__main__':
+    capture_thread = threading.Thread(target=scheduled_capture, args=(60,))  # Capture every 60 seconds
+    capture_thread.start()
+    app.run(debug=True)
