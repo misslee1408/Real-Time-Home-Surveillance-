@@ -26,77 +26,12 @@ class _CameraPageState extends State<CameraPage> {
   Future<void> _deleteCamera(int id) async {
     try {
       await ApiService().deleteCamera(id);
-      // Refresh the cameras list after deletion
+      // After deleting, refresh the list of cameras
       _refreshCameras();
     } catch (e) {
       // Handle error
       print('Error deleting camera: $e');
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Cameras')),
-      body: FutureBuilder<List<Camera>>(
-        future: futureCameras,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Camera camera = snapshot.data![index];
-                return ListTile(
-                  title: Text(camera.name),
-                  subtitle: Text(camera.location),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Switch(
-                        value: camera.isActive,
-                        onChanged: (value) {
-                          // Handle switch toggle if needed
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          _showDeleteConfirmation(context, camera.id);
-                        },
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LiveStreamScreen(camera: camera),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load cameras'));
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Navigate to add camera screen
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddCameraScreen()),
-          );
-          if (result == true) {
-            _refreshCameras(); // Refresh the list after adding a new camera
-          }
-        },
-        child: Icon(Icons.add),
-      ),
-    );
   }
 
   void _showDeleteConfirmation(BuildContext context, int cameraId) {
@@ -123,6 +58,74 @@ class _CameraPageState extends State<CameraPage> {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Cameras')),
+      body: FutureBuilder<List<Camera>>(
+        future: futureCameras,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Failed to load cameras'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No cameras available'));
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              Camera camera = snapshot.data![index];
+              return ListTile(
+                title: Text(camera.name),
+                subtitle: Text(camera.location),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Switch(
+                      value: camera.isActive,
+                      onChanged: (value) {
+                        // Handle switch toggle if needed
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        _showDeleteConfirmation(context, camera.id);
+                      },
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LiveStreamScreen(camera: camera),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Navigate to add camera screen
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddCameraScreen()),
+          );
+          if (result == true) {
+            _refreshCameras(); // Refresh the list after adding a new camera
+          }
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

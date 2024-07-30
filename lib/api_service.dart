@@ -49,26 +49,12 @@ class ApiService {
   }
 
 
- Future<void> deleteCamera(int id) async {
-  try {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print('Camera deleted successfully.');
-    } else {
-      print('Failed to delete camera: ${response.body}');
-      throw Exception('Failed to delete camera: ${response.body}');
+  Future<void> deleteCamera(int id) async {
+    final response = await http.delete(Uri.parse('http://localhost:3000/api/cameras/$id'));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete camera');
     }
-  } catch (error) {
-    print('Error deleting camera: $error');
-    throw Exception('Failed to delete camera: $error');
   }
-}
 }
 
 class Camera {
