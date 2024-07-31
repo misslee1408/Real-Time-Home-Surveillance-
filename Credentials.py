@@ -58,7 +58,7 @@ def index():
 
 def generate_frames():
     try:
-        cap = cv2.VideoCapture('http://41.70.47.48:8556/')  
+        cap = cv2.VideoCapture('http://41.70.47.90:8554/mystream')  
         while True:
             success, frame = cap.read()
             if not success:
@@ -71,7 +71,7 @@ def generate_frames():
                     continue
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         cap.release()
     except Exception as e:
         logger.error(f"Error generating frames: {e}")
