@@ -1,11 +1,11 @@
 import logging
 import datetime
 import cv2
-from flask import Flask, render_template, request, send_from_directory, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response
 from twilio.rest import Client
 import config
 import firebase_admin
-from firebase_admin import credentials, firestore, storage
+from firebase_admin import credentials, firestore
 import os
 from werkzeug.utils import secure_filename
 import tempfile
@@ -21,16 +21,13 @@ app = Flask(__name__)
 # Initialize Firebase Admin SDK
 try:
     cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS_PATH"))
-    firebase_admin.initialize_app(cred, {
-        'storageBucket': os.getenv("FIREBASE_STORAGE_BUCKET")
-    })
+    firebase_admin.initialize_app(cred)
     logger.info("Firebase initialized successfully.")
 except Exception as e:
     logger.error(f"Error initializing Firebase: {e}")
 
 # Firestore client
 db = firestore.client()
-bucket = storage.bucket()
 
 # Twilio Client
 try:
@@ -58,7 +55,7 @@ def index():
 
 def generate_frames():
     try:
-        cap = cv2.VideoCapture('http://41.70.47.90:8554/mystream')  
+        cap = cv2.VideoCapture('http://41.70.47.90:8888/mystream')  
         while True:
             success, frame = cap.read()
             if not success:
@@ -82,7 +79,7 @@ def video_feed():
 
 def save_and_upload_video():
     try:
-        cap = cv2.VideoCapture('http://41.70.47.48:8556/')  
+        cap = cv2.VideoCapture('http://41.70.47.90:8888/mystream')  
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         temp_dir = tempfile.mkdtemp()
         video_path = os.path.join(temp_dir, 'output.avi')
@@ -98,17 +95,11 @@ def save_and_upload_video():
         cap.release()
         out.release()
         
-        # Upload to Firebase Storage
-        blob = bucket.blob(f'videos/{datetime.datetime.now().isoformat()}.avi')
-        blob.upload_from_filename(video_path)
-        logger.info(f"Video uploaded to Firebase Storage: {blob.name}")
-
         # Save metadata in Firestore
         doc_ref = db.collection('VideoCollection').document()
         doc_ref.set({
-            'filename': blob.name,
+            'filename': 'output.avi',
             'timestamp': datetime.datetime.now().isoformat(),
-            'url': blob.public_url
         })
         logger.info(f"Video metadata saved to Firestore: {doc_ref.id}")
 
