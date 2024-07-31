@@ -4,7 +4,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 // Replace with the actual URL of your camera stream
 const cameraStreamUrl = 'http://username:password@41.70.47.48:8556/';
-
+// const cameraStreamUrl='https://www.radiantmediaplayer.com/media/bbb-360p.mp4';
 const streamVideo = (req, res) => {
   try {
     res.contentType('video/webm');

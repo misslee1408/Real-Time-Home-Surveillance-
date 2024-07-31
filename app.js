@@ -25,7 +25,7 @@ const Nexmo = require('nexmo');
 
 // Middleware to parse JSON and urlencoded data
 app.use(cors({
-  origin: 'http://localhost:13638/', // Replace with your frontend URL
+  origin: 'http://localhost:13171/', // Replace with your frontend URL
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 }));
