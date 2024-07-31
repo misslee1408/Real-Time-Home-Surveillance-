@@ -25,6 +25,10 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget> {
   @override
   void initState() {
     super.initState();
+    _initializeController();
+  }
+
+  void _initializeController() {
     _controller = VideoPlayerController.network(widget.streamUrl)
       ..initialize().then((_) {
         setState(() {});
@@ -42,8 +46,11 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget> {
     setState(() {
       if (_isPlaying) {
         _controller.pause();
+        print('Paused');
       } else {
-        _controller.play();
+        _controller.dispose();
+        _initializeController(); // Reinitialize the controller to resume streaming
+        print('Playing');
       }
       _isPlaying = !_isPlaying;
     });
@@ -51,13 +58,13 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget> {
 
   void _rewind() {
     final position = _controller.value.position;
-    final rewindPosition = position - Duration(seconds: 10);
+    final rewindPosition = position - Duration(seconds: 2);
     _controller.seekTo(rewindPosition);
   }
 
   void _forward() {
     final position = _controller.value.position;
-    final forwardPosition = position + Duration(seconds: 10);
+    final forwardPosition = position + Duration(seconds: 2);
     _controller.seekTo(forwardPosition);
   }
 
