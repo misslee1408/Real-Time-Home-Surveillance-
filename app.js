@@ -27,7 +27,7 @@ const Nexmo = require('nexmo');
 const allowedOrigins = ['http://localhost:60601'];
 
 app.use(cors({
-  origin: 'http://localhost:13171/', // Replace with your frontend URL
+  origin: 'http://localhost:10698/', // Replace with your frontend URL
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 }));
