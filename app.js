@@ -24,7 +24,7 @@ const Nexmo = require('nexmo');
 
 
 // Middleware to parse JSON and urlencoded data
-const allowedOrigins = ['http://localhost:60601'];
+const allowedOrigins = ['http://localhost:61130'];
 
 app.use(cors({
     origin: function(origin, callback) {
