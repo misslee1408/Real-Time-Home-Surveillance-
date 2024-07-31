@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "postgres",
-    "password": "floxyleon2",
+    "password": "liana",
     "database": "homeSecurity",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": "floxyleon2",
+    "password": "liana",
     "database": "homeSecurity",
     "host": "localhost",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
-    "password": "floxyleon2",
+    "password": "liana",
     "database": "homeSecurity",
     "host": "localhost",
     "dialect": "postgres"
