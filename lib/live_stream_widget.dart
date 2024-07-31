@@ -88,10 +88,9 @@ Future<void> _startRecording() async {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
       },
       body: jsonEncode({
-        'streamUrl': widget.streamUrl,
+        'cameraUrl': widget.streamUrl, // Ensure 'cameraUrl' matches the expected key on the server
       }),
     );
 
@@ -112,11 +111,7 @@ Future<void> _stopRecording() async {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Basic ' + base64Encode(utf8.encode('$username:$password')),
       },
-      body: jsonEncode({
-        'streamUrl': widget.streamUrl,
-      }),
     );
 
     if (response.statusCode == 200) {
