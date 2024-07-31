@@ -6,6 +6,7 @@ exports.addCamera = async (req, res) => {
     const newCamera = await Camera.create({ name, location, streamurl, isActive });
     res.status(201).json(newCamera);
   } catch (error) {
+    console.error('Error adding camera:', error);
     res.status(500).json({ error: 'Failed to add camera' });
   }
 };
@@ -15,14 +16,10 @@ exports.getCameras = async (req, res) => {
     const cameras = await Camera.findAll();
     res.status(200).json(cameras);
   } catch (error) {
+    console.error('Error fetching cameras:', error);
     res.status(500).json({ error: 'Failed to retrieve cameras' });
   }
 };
-
-
-/* This function retrieves a camera based on its ID from the database.
-It uses findByPk method to find a camera by its primary key (ID).
-If found, it returns the camera data; otherwise, it returns a 404 status with an error message. */
 
 exports.getCameraById = async (req, res) => {
   try {
@@ -34,6 +31,7 @@ exports.getCameraById = async (req, res) => {
       res.status(404).json({ error: 'Camera not found' });
     }
   } catch (error) {
+    console.error('Error retrieving camera:', error);
     res.status(500).json({ error: 'Failed to retrieve camera' });
   }
 };
@@ -48,6 +46,7 @@ exports.deleteCamera = async (req, res) => {
       res.status(404).json({ error: 'Camera not found' });
     }
   } catch (error) {
+    console.error('Error deleting camera:', error);
     res.status(500).json({ error: 'Failed to delete camera' });
   }
 };

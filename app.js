@@ -18,12 +18,14 @@ dotenv.config();
 // Serve HLS content
 const hlsDir = path.join(__dirname, 'hls');
 if (!fs.existsSync(hlsDir)) {
-    fs.mkdirSync(hlsDir);
+  fs.mkdirSync(hlsDir);
 }
 const Nexmo = require('nexmo');
 
 
 // Middleware to parse JSON and urlencoded data
+const allowedOrigins = ['http://localhost:60601'];
+
 app.use(cors({
   origin: 'http://localhost:13171/', // Replace with your frontend URL
   methods: 'GET,POST,PUT,DELETE',
@@ -68,29 +70,9 @@ const streamRouter = require('./routes/stream');
 app.use('/hls', express.static(hlsDir));
 app.use('/api/streams', streamRouter);
 
-// Example using Express.js
-app.get('/api/footages', (req, res) => {
-  const fs = require('fs');
-  const path = require('path');
-  const footagesDir = path.join(__dirname, 'footages');
-  
-  fs.readdir(footagesDir, (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: 'Unable to read footages directory' });
-    }
-    
-    const videos = files.map(file => ({
-      name: file,
-      url: `/footages/${file}` // Adjust the URL path as needed
-    }));
-    
-    res.json(videos);
-  });
-});
 
-// Example using Express.js
-app.use('/footages', express.static(path.join(__dirname, 'footages')));
-
+const footageRoutes = require('./routes/footage');
+app.use('/api', footageRoutes);
 
 // Test database connection
 sequelize.authenticate()
@@ -156,8 +138,8 @@ console.log('WebSocket server is running on ws://localhost:8080');
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // //import and use stream routes
-// const streamRoutes = require('./routes/stream'); 
-// app.use('/api/stream/', streamRoutes); 
+// const streamRoutes = require('./routes/stream');
+// app.use('/api/stream/', streamRoutes);
 
 // // Import and use camera routes
 // const cameraRoutes = require('./routes/camera');

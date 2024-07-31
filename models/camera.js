@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     location: {
       type: DataTypes.STRING,
@@ -10,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     streamurl: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
   }, {
     timestamps: true,
