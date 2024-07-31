@@ -46,7 +46,37 @@ class _FootagePlayerPageState extends State<FootagePlayerPage> {
           _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
         ),
       ),
+      bottomNavigationBar: _controller.value.isInitialized
+          ? BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.replay_10),
+                    onPressed: () => _rewind(),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.forward_10),
+                    onPressed: () => _forward(),
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
+  }
+
+  void _rewind() {
+    final position = _controller.value.position;
+    final rewindPosition = position - Duration(seconds: 2);
+    _controller.seekTo(rewindPosition > Duration.zero ? rewindPosition : Duration.zero);
+  }
+
+  void _forward() {
+    final position = _controller.value.position;
+    final forwardPosition = position + Duration(seconds: 2);
+    final duration = _controller.value.duration;
+    _controller.seekTo(forwardPosition < duration ? forwardPosition : duration);
   }
 
   @override

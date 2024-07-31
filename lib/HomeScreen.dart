@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                             // Create a Camera object
                             final camera = Camera(
                               id: 1, // Provide the id
-                              name: 'Camera 1',
+                              name: 'Camera',
                               streamurl: 'http://localhost:3000/api/streams/stream', location: '', isActive: true,
                             );
 
@@ -94,17 +94,6 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(
                                 builder: (context) => LiveStreamScreen(camera: camera),
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        MenuButton(
-                          icon: Icons.emergency_recording,
-                          text: 'Record stream',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => RecordedPage()),
                             );
                           },
                         ),
