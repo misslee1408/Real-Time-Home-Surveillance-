@@ -24,10 +24,16 @@ const Nexmo = require('nexmo');
 
 
 // Middleware to parse JSON and urlencoded data
+const allowedOrigins = ['http://localhost:60601'];
+
 app.use(cors({
-  origin: 'http://localhost:5981/', // Replace with your frontend URL
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization',
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
 
 
