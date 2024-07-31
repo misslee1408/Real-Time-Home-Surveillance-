@@ -10,7 +10,7 @@ class FootagePlayerPage extends StatefulWidget {
   _FootagePlayerPageState createState() => _FootagePlayerPageState();
 }
 
-class _FootagePlayerPageState extends State<FootagePlayerPage> {
+class _FootagePlayerPageState extends State<FootagePlayerPage> { 
   late VideoPlayerController _controller;
 
   @override
