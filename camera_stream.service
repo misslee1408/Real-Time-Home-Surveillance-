@@ -1,0 +1,11 @@
+[Unit]
+Description=Camera Stream Service
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c '/home/username/Real-Time-Home-Surveillance-/camera_stream.sh && /home/username/Real-Time-Home-Surveillance-/motion_alert.sh'
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
