@@ -1,7 +1,7 @@
 const ffmpeg = require('fluent-ffmpeg');
 
-// Replace with the actual URL of your camera stream
-const cameraStreamUrl = 'rtsp://41.70.47.48:8554/mystream';
+// URL of your camera stream
+const cameraStreamUrl = 'rtsp://41.70.47.48/:544/Streaming/channels/101';
 
 const streamVideo = (req, res) => {
   try {
@@ -13,7 +13,11 @@ const streamVideo = (req, res) => {
       ])
       .outputOptions([
         '-preset', 'ultrafast',          // Use ultrafast preset for minimal latency
-        '-crf', '18'                     // Constant Rate Factor (lower is better quality)
+        '-crf', '18',                    // Constant Rate Factor (lower is better quality)
+        '-bufsize', '300000k',           // Set buffer size (300 MB, adjust as needed)
+        '-maxrate', '10000k',            // Maximum bitrate for the stream
+        '-b:v', '8000k',                 // Set video bitrate
+        '-g', '50'                       // Set group of pictures (GOP) size
       ])
       .format('webm')                    // Use webm for streaming
       .videoCodec('libvpx')              // Use libvpx for video codec

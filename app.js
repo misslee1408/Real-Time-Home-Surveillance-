@@ -24,7 +24,7 @@ const Nexmo = require('nexmo');
 
 
 // Middleware to parse JSON and urlencoded data
-const allowedOrigins = ['http://localhost:61130'];
+const allowedOrigins = ['http://localhost:50615'];
 
 app.use(cors({
     origin: function(origin, callback) {
@@ -72,7 +72,7 @@ app.use('/api/recording', recordingRoutes);
 //import and use stream routes
 const streamRouter = require('./routes/stream');
 app.use('/hls', express.static(hlsDir));
-app.use('/api/streams', streamRouter);
+app.use('/api', streamRouter);
 
 
 const footageRoutes = require('./routes/footage');
