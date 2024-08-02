@@ -55,17 +55,17 @@ def index():
 
 def generate_frames():
     try:
-        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')  
+        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')
         while True:
             success, frame = cap.read()
             if not success:
                 logger.warning("Failed to read frame from camera.")
-                break
+                continue  # Skip the failed frame and try the next one
             else:
                 ret, buffer = cv2.imencode('.jpg', frame)
                 if not ret:
                     logger.warning("Failed to encode frame.")
-                    continue
+                    continue  # Skip the failed encoding and try the next frame
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'
                         b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -79,7 +79,7 @@ def video_feed():
 
 def save_and_upload_video():
     try:
-        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')  
+        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         temp_dir = tempfile.mkdtemp()
         video_path = os.path.join(temp_dir, 'output.avi')
@@ -89,7 +89,7 @@ def save_and_upload_video():
             success, frame = cap.read()
             if not success:
                 logger.warning("Failed to read frame from camera.")
-                break
+                continue  # Skip the failed frame and try the next one
             out.write(frame)
 
         cap.release()
@@ -135,9 +135,10 @@ def scheduled_capture(interval=60):
 
 if __name__ == '__main__':
     try:
-        capture_thread = threading.Thread(target=scheduled_capture, args=(60,))  # Capture every 60 seconds
+        capture_thread = threading.Thread(target=scheduled_capture, args=(60,))
+        capture_thread.daemon = True  # Ensures the thread will close when the main program exits
         capture_thread.start()
         logger.info("Scheduled capture thread started.")
-        app.run(debug=True)
+        app.run(debug=True, use_reloader=False)  # Prevents the reloader from starting multiple threads
     except Exception as e:
         logger.error(f"Error running Flask application: {e}")
