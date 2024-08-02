@@ -55,7 +55,7 @@ def index():
 
 def generate_frames():
     try:
-        cap = cv2.VideoCapture('http://41.70.47.90:8888/mystream')  
+        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')  
         while True:
             success, frame = cap.read()
             if not success:
@@ -79,7 +79,7 @@ def video_feed():
 
 def save_and_upload_video():
     try:
-        cap = cv2.VideoCapture('http://41.70.47.90:8888/mystream')  
+        cap = cv2.VideoCapture('rtsp://41.70.47.48/:544/Streaming/channels/101')  
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         temp_dir = tempfile.mkdtemp()
         video_path = os.path.join(temp_dir, 'output.avi')
